@@ -15,6 +15,20 @@
         --good: #34d399;
         --bad: #fb7185;
         --muted: #9fb2d1;
+        --logo: #f8fbff;
+      }
+
+      :root[data-theme='light'] {
+        color-scheme: light;
+        --bg: #f6f9ff;
+        --panel: #ffffff;
+        --panel-2: #eef3ff;
+        --text: #101828;
+        --accent: #2563eb;
+        --good: #059669;
+        --bad: #dc2626;
+        --muted: #475467;
+        --logo: #111827;
       }
 
       body {
@@ -31,10 +45,14 @@
       .game {
         width: min(900px, 100%);
         background: linear-gradient(165deg, var(--panel) 0%, var(--panel-2) 100%);
-        border: 1px solid #2b3b61;
+        border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
         border-radius: 18px;
-        box-shadow: 0 20px 50px rgb(0 0 0 / 0.55), 0 0 0 1px rgb(34 211 238 / 0.08) inset;
+        box-shadow: 0 20px 50px rgb(0 0 0 / 0.35), 0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent) inset;
         padding: 20px;
+      }
+
+      :root[data-theme='light'] body {
+        background: radial-gradient(circle at 20% 0%, #dbeafe 0%, #eef2ff 45%, var(--bg) 100%);
       }
 
       h1 {
@@ -61,6 +79,12 @@
       }
 
 
+      .top-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
       .lang-switch {
         display: flex;
         gap: 6px;
@@ -68,10 +92,19 @@
 
       .lang-btn {
         padding: 6px 8px;
-        font-size: 1rem;
+        font-size: 0.9rem;
         border-radius: 8px;
-        background: #0f172a;
-        border: 1px solid #35507e;
+        background: color-mix(in srgb, var(--panel) 82%, #000 18%);
+        border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+        color: var(--text);
+      }
+
+      .theme-btn {
+        padding: 6px 10px;
+        border-radius: 8px;
+        background: color-mix(in srgb, var(--panel) 82%, #000 18%);
+        border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+        color: var(--text);
       }
 
       .lang-btn.active {
@@ -86,7 +119,7 @@
       }
 
       .card {
-        background: #0f172a;
+        background: color-mix(in srgb, var(--panel) 88%, #000 12%);
         border-radius: 12px;
         padding: 10px;
         text-align: center;
@@ -140,9 +173,9 @@
         font-size: 1.05rem;
         text-transform: uppercase;
         border-radius: 10px;
-        border: 1px solid #2b3b61;
+        border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
         padding: 8px 10px;
-        background: #0f172a;
+        background: color-mix(in srgb, var(--panel) 86%, #000 14%);
         color: var(--text);
       }
 
@@ -187,7 +220,7 @@
       }
 
       .hint {
-        color: #fcd34d;
+        color: color-mix(in srgb, #fcd34d 82%, var(--text) 18%);
         min-height: 1.4em;
       }
 
@@ -241,10 +274,13 @@
     <main class="game">
       <div class="header-row">
         <img id="app-logo" alt="Memora" />
-        <div class="lang-switch" aria-label="Idioma">
-          <button type="button" class="lang-btn" data-lang="es" title="Español">🇪🇸</button>
-          <button type="button" class="lang-btn" data-lang="en" title="English">🇬🇧</button>
-          <button type="button" class="lang-btn" data-lang="pt" title="Português">🇵🇹</button>
+        <div class="top-controls">
+          <button class="theme-btn" id="theme-btn" type="button" title="Alternar tema">🌙/☀️</button>
+          <div class="lang-switch" aria-label="Idioma">
+            <button type="button" class="lang-btn" data-lang="es" title="Español">🇪🇸 Español</button>
+            <button type="button" class="lang-btn" data-lang="en" title="English">🇬🇧 English</button>
+            <button type="button" class="lang-btn" data-lang="pt" title="Português">🇵🇹 Português</button>
+          </div>
         </div>
       </div>
       <p class="meta" id="meta"></p>
@@ -308,18 +344,12 @@
       ];
 
       const I18N = {
-        es: { level: 'Nivel', points: 'Puntos', time: 'Tiempo', attempts: 'Intentos', errors: 'Errores', bonus: '+Tiempo letra', used: 'Letras usadas:', none: '(ninguna)', hintBtn: 'PISTA (-1)', restart: 'Reiniciar nivel',
-          enterLetter: 'Para letra, ingresa exactamente 1 carácter.', usedLetter: 'Esa letra ya fue usada.', correctLetter: '¡Correcta! Ganaste +{bonus}s.', wrongLetter: 'Letra incorrecta: -1 intento.',
-          invalidWord: 'Ingresa una palabra válida (solo letras).', wrongWord: 'Palabra incorrecta: -1 intento.', invalidInput: 'Ingresa una letra o palabra válida.', hintUsed: 'Pista usada: -1 intento.', hintAlready: 'Ya usaste la pista en esta palabra.',
-          result: 'Resultado disponible en la ventana emergente.', tryAgain: 'Inténtalo de nuevo', restartModal: 'Comenzar de nuevo', done: 'Juego completado', back1: 'Volver al nivel 1', levelDone: 'Nivel superado', nextLevel: 'Siguiente nivel', wordDone: 'Palabra acertada', nextWord: 'Siguiente palabra', noAttempts: 'Sin intentos', timeOver: 'Se acabó el tiempo', loading: 'Cargando...', theme: 'Tema', difficulty: 'Dificultad', hidden: '(oculta)' },
-        en: { level: 'Level', points: 'Points', time: 'Time', attempts: 'Attempts', errors: 'Errors', bonus: '+Time/letter', used: 'Used letters:', none: '(none)', hintBtn: 'HINT (-1)', restart: 'Restart level',
-          enterLetter: 'For a letter, enter exactly 1 character.', usedLetter: 'That letter was already used.', correctLetter: 'Correct! You gained +{bonus}s.', wrongLetter: 'Wrong letter: -1 attempt.',
-          invalidWord: 'Enter a valid word (letters only).', wrongWord: 'Wrong word: -1 attempt.', invalidInput: 'Enter a valid letter or word.', hintUsed: 'Hint used: -1 attempt.', hintAlready: 'Hint already used for this word.',
-          result: 'Result available in popup.', tryAgain: 'Try again', restartModal: 'Start again', done: 'Game completed', back1: 'Back to level 1', levelDone: 'Level completed', nextLevel: 'Next level', wordDone: 'Word solved', nextWord: 'Next word', noAttempts: 'No attempts left', timeOver: 'Time is over', loading: 'Loading...', theme: 'Theme', difficulty: 'Difficulty', hidden: '(hidden)' },
-        pt: { level: 'Nível', points: 'Pontos', time: 'Tempo', attempts: 'Tentativas', errors: 'Erros', bonus: '+Tempo/letra', used: 'Letras usadas:', none: '(nenhuma)', hintBtn: 'DICA (-1)', restart: 'Reiniciar nível',
-          enterLetter: 'Para letra, digite exatamente 1 caractere.', usedLetter: 'Essa letra já foi usada.', correctLetter: 'Correta! Você ganhou +{bonus}s.', wrongLetter: 'Letra incorreta: -1 tentativa.',
-          invalidWord: 'Digite uma palavra válida (somente letras).', wrongWord: 'Palavra incorreta: -1 tentativa.', invalidInput: 'Digite uma letra ou palavra válida.', hintUsed: 'Dica usada: -1 tentativa.', hintAlready: 'Você já usou a dica nesta palavra.',
-          result: 'Resultado disponível no popup.', tryAgain: 'Tente novamente', restartModal: 'Começar de novo', done: 'Jogo concluído', back1: 'Voltar ao nível 1', levelDone: 'Nível superado', nextLevel: 'Próximo nível', wordDone: 'Palavra acertada', nextWord: 'Próxima palavra', noAttempts: 'Sem tentativas', timeOver: 'O tempo acabou', loading: 'Carregando...', theme: 'Tema', difficulty: 'Dificuldade', hidden: '(oculta)' },
+        es: { level: 'Nivel', points: 'Puntos', time: 'Tiempo', attempts: 'Intentos', errors: 'Errores', bonus: '+Tiempo letra', used: 'Letras usadas:', none: '(ninguna)',
+          hintBtn: 'PISTA (-1)', restart: 'Reiniciar nivel', hintPrefix: 'Pista', result: 'Resultado disponible en la ventana emergente.', tryAgain: 'Inténtalo de nuevo', restartModal: 'Comenzar de nuevo', done: 'Juego completado', back1: 'Volver al nivel 1', levelDone: 'Nivel superado', nextLevel: 'Siguiente nivel', wordDone: 'Palabra acertada', nextWord: 'Siguiente palabra', noAttempts: 'Sin intentos', timeOver: 'Se acabó el tiempo', loading: 'Cargando...', theme: 'Tema', difficulty: 'Dificultad', hidden: '(oculta)', enterLetter: 'Para letra, ingresa exactamente 1 carácter.', usedLetter: 'Esa letra ya fue usada.', correctLetter: '¡Correcta! Ganaste +{bonus}s.', wrongLetter: 'Letra incorrecta: -1 intento.', invalidWord: 'Ingresa una palabra válida (solo letras).', wrongWord: 'Palabra incorrecta: -1 intento.', invalidInput: 'Ingresa una letra o palabra válida.', hintUsed: 'Pista usada: -1 intento.', hintAlready: 'Ya usaste la pista en esta palabra.', themeToggle: 'Modo día/noche' },
+        en: { level: 'Level', points: 'Points', time: 'Time', attempts: 'Attempts', errors: 'Errors', bonus: '+Time/letter', used: 'Used letters:', none: '(none)',
+          hintBtn: 'HINT (-1)', restart: 'Restart level', hintPrefix: 'Hint', result: 'Result available in popup.', tryAgain: 'Try again', restartModal: 'Start again', done: 'Game completed', back1: 'Back to level 1', levelDone: 'Level completed', nextLevel: 'Next level', wordDone: 'Word solved', nextWord: 'Next word', noAttempts: 'No attempts left', timeOver: 'Time is over', loading: 'Loading...', theme: 'Theme', difficulty: 'Difficulty', hidden: '(hidden)', enterLetter: 'For a letter, enter exactly 1 character.', usedLetter: 'That letter was already used.', correctLetter: 'Correct! You gained +{bonus}s.', wrongLetter: 'Wrong letter: -1 attempt.', invalidWord: 'Enter a valid word (letters only).', wrongWord: 'Wrong word: -1 attempt.', invalidInput: 'Enter a valid letter or word.', hintUsed: 'Hint used: -1 attempt.', hintAlready: 'Hint already used for this word.', themeToggle: 'Light/Dark mode' },
+        pt: { level: 'Nível', points: 'Pontos', time: 'Tempo', attempts: 'Tentativas', errors: 'Erros', bonus: '+Tempo/letra', used: 'Letras usadas:', none: '(nenhuma)',
+          hintBtn: 'DICA (-1)', restart: 'Reiniciar nível', hintPrefix: 'Dica', result: 'Resultado disponível no popup.', tryAgain: 'Tente novamente', restartModal: 'Começar de novo', done: 'Jogo concluído', back1: 'Voltar ao nível 1', levelDone: 'Nível superado', nextLevel: 'Próximo nível', wordDone: 'Palavra acertada', nextWord: 'Próxima palavra', noAttempts: 'Sem tentativas', timeOver: 'O tempo acabou', loading: 'Carregando...', theme: 'Tema', difficulty: 'Dificuldade', hidden: '(oculta)', enterLetter: 'Para letra, digite exatamente 1 caractere.', usedLetter: 'Essa letra já foi usada.', correctLetter: 'Correta! Você ganhou +{bonus}s.', wrongLetter: 'Letra incorreta: -1 tentativa.', invalidWord: 'Digite uma palavra válida (somente letras).', wrongWord: 'Palavra incorreta: -1 tentativa.', invalidInput: 'Digite uma letra ou palavra válida.', hintUsed: 'Dica usada: -1 tentativa.', hintAlready: 'Você já usou a dica nesta palavra.', themeToggle: 'Modo claro/escuro' },
       };
 
       const ONLINE_MODE = true;
@@ -327,7 +357,7 @@
       const MAX_LEVELS = LEVELS.length;
       const POINTS_PER_WORD = 1;
 
-            const labelLevelEl = document.getElementById('label-level');
+      const labelLevelEl = document.getElementById('label-level');
       const labelPointsEl = document.getElementById('label-points');
       const labelTimeEl = document.getElementById('label-time');
       const labelAttemptsEl = document.getElementById('label-attempts');
@@ -335,6 +365,7 @@
       const labelBonusEl = document.getElementById('label-bonus');
       const usedLabelEl = document.getElementById('used-label');
       const langButtons = document.querySelectorAll('.lang-btn');
+      const themeBtn = document.getElementById('theme-btn');
 
       const wordEl = document.getElementById('word');
       const timeEl = document.getElementById('time');
@@ -355,25 +386,10 @@
       const modalTitleEl = document.getElementById('modal-title');
       const modalTextEl = document.getElementById('modal-text');
       const modalActionBtn = document.getElementById('modal-action');
-
-      const logoSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='560' height='120' viewBox='0 0 560 120'>
-        <rect width='560' height='120' fill='none'/>
-        <g fill='none' stroke='#0b0b0b' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'>
-          <path d='M24 102h130'/>
-          <path d='M54 102v-60h62'/>
-          <path d='M85 42l-31 31'/>
-          <circle cx='122' cy='25' r='18'/>
-          <path d='M122 43v14'/>
-          <circle cx='122' cy='66' r='8'/>
-          <path d='M122 74v20'/>
-          <path d='M110 94c0-8 6-14 12-14s12 6 12 14'/>
-        </g>
-        <text x='176' y='84' font-size='78' font-family='Arial, Helvetica, sans-serif' font-weight='700' fill='#0b0b0b'>Memora</text>
-      </svg>`;
       const appLogoEl = document.getElementById('app-logo');
-      appLogoEl.src = `data:image/svg+xml;utf8,${encodeURIComponent(logoSvg)}`;
 
       let currentLang = 'es';
+      let currentTheme = 'dark';
       let levelIndex = 0;
       let levelPoints = 0;
       let secretWord = '';
@@ -389,14 +405,33 @@
 
       const usedWordsCache = new Set();
       const definitionCache = new Map();
+      const translationCache = new Map();
 
       const t = (key, vars = {}) => {
         let text = (I18N[currentLang] && I18N[currentLang][key]) || I18N.es[key] || key;
-        Object.entries(vars).forEach(([k, v]) => {
-          text = text.replaceAll(`{${k}}`, String(v));
-        });
+        Object.entries(vars).forEach(([k, v]) => { text = text.replaceAll(`{${k}}`, String(v)); });
         return text;
       };
+
+      function renderLogo() {
+        const logoColor = getComputedStyle(document.documentElement).getPropertyValue('--logo').trim() || '#fff';
+        const logoSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='560' height='120' viewBox='0 0 560 120'>
+          <rect width='560' height='120' fill='none'/>
+          <g fill='none' stroke='${logoColor}' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'>
+            <path d='M24 102h130'/><path d='M54 102v-60h62'/><path d='M85 42l-31 31'/><circle cx='122' cy='25' r='18'/>
+            <path d='M122 43v14'/><circle cx='122' cy='66' r='8'/><path d='M122 74v20'/><path d='M110 94c0-8 6-14 12-14s12 6 12 14'/>
+          </g>
+          <text x='176' y='84' font-size='78' font-family='Arial, Helvetica, sans-serif' font-weight='700' fill='${logoColor}'>Memora</text>
+        </svg>`;
+        appLogoEl.src = `data:image/svg+xml;utf8,${encodeURIComponent(logoSvg)}`;
+      }
+
+      function setTheme(theme) {
+        currentTheme = theme === 'light' ? 'light' : 'dark';
+        if (currentTheme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+        else document.documentElement.removeAttribute('data-theme');
+        renderLogo();
+      }
 
       function applyLanguage() {
         document.documentElement.lang = currentLang;
@@ -409,56 +444,60 @@
         usedLabelEl.textContent = t('used');
         hintBtn.textContent = t('hintBtn');
         restartBtn.textContent = t('restart');
-                if (['(ninguna)', '(none)', '(nenhuma)'].includes(usedEl.textContent.trim())) {
-          usedEl.textContent = t('none');
-        }
+        themeBtn.title = t('themeToggle');
+        themeBtn.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+        hintEl.textContent = `${t('hintPrefix')}: ${hintUsed ? currentHint : t('hidden')}`;
+        if (!wrongLetters.size) usedEl.textContent = t('none');
+        langButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.lang === currentLang));
       }
 
       function currentLevel() { return LEVELS[levelIndex]; }
       function levelAttempts(index) { if (index < 6) return 8; if (index < 12) return 7; if (index < 17) return 6; return 5; }
       function levelTime(index) { if (index < 6) return 55; if (index < 12) return 50; if (index < 17) return 45; return 40; }
-
-      function normalizeText(value) {
-        return value.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().trim();
-      }
-
+      function normalizeText(value) { return value.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().trim(); }
       function sanitizeWord(rawWord) { return normalizeText(rawWord).replace(/[^A-ZÑ]/g, ''); }
 
-      async function fetchJsonWithTimeout(url, timeoutMs = 2500) {
+      async function fetchJsonWithTimeout(url, timeoutMs = 3000) {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeoutMs);
         try {
           const res = await fetch(url, { signal: controller.signal });
           if (!res.ok) return null;
           return await res.json();
-        } catch {
-          return null;
-        } finally {
-          clearTimeout(timer);
-        }
+        } catch { return null; } finally { clearTimeout(timer); }
       }
 
-      async function translateToSpanish(text) {
-        const data = await fetchJsonWithTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=es&dt=t&q=${encodeURIComponent(text)}`, 3000);
+      async function translateText(text, targetLang, sourceLang = 'auto') {
+        if (!text || targetLang === sourceLang) return text;
+        const key = `${sourceLang}|${targetLang}|${text}`;
+        if (translationCache.has(key)) return translationCache.get(key);
+        const data = await fetchJsonWithTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`);
+        let translated = text;
         if (Array.isArray(data) && Array.isArray(data[0])) {
-          const translated = data[0].map((part) => part[0]).join('');
-          if (translated) return translated;
+          const built = data[0].map((part) => part[0]).join('').trim();
+          if (built) translated = built;
         }
-        return `Descripción en español no disponible para "${text}".`;
+        translationCache.set(key, translated);
+        return translated;
       }
 
-      async function fetchOnlineDefinition(word) {
+      async function localizeWordEntry(entry) {
+        if (currentLang === 'es') return { word: sanitizeWord(entry.word), hint: entry.hint, theme: currentLevel().theme };
+        const translatedWord = sanitizeWord(await translateText(entry.word.toLowerCase(), currentLang, 'es'));
+        const translatedHint = await translateText(entry.hint, currentLang, 'es');
+        const translatedTheme = await translateText(currentLevel().theme, currentLang, 'es');
+        return { word: translatedWord || sanitizeWord(entry.word), hint: translatedHint, theme: translatedTheme };
+      }
+
+      async function fetchOnlineDefinitionEn(word) {
         const lower = word.toLowerCase();
         if (definitionCache.has(lower)) return definitionCache.get(lower);
-
         const data = await fetchJsonWithTimeout(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(lower)}`);
-        let definition = `Palabra relacionada con ${currentLevel().theme}.`;
-
+        let definition = `Word related to ${currentLevel().theme}.`;
         if (Array.isArray(data) && data[0]?.meanings?.length) {
           const firstDef = data[0].meanings[0]?.definitions?.[0]?.definition;
-          if (firstDef) definition = await translateToSpanish(firstDef);
+          if (firstDef) definition = firstDef;
         }
-
         definitionCache.set(lower, definition);
         return definition;
       }
@@ -467,21 +506,22 @@
         for (let i = 0; i < 8; i += 1) {
           const endpoint = RANDOM_WORD_ENDPOINTS[i % RANDOM_WORD_ENDPOINTS.length];
           const data = await fetchJsonWithTimeout(endpoint);
-          const candidate = Array.isArray(data) ? sanitizeWord(data[0] || '') : '';
-          if (!candidate || candidate.length < 4) continue;
-          if (usedWordsCache.has(candidate)) continue;
-          const hint = await fetchOnlineDefinition(candidate);
-          return { word: candidate, hint };
+          const baseWord = Array.isArray(data) ? sanitizeWord(data[0] || '') : '';
+          if (!baseWord || baseWord.length < 4 || usedWordsCache.has(`${currentLang}:${baseWord}`)) continue;
+          const definitionEn = await fetchOnlineDefinitionEn(baseWord);
+          const localizedWord = currentLang === 'en' ? baseWord : sanitizeWord(await translateText(baseWord.toLowerCase(), currentLang, 'en'));
+          const localizedHint = currentLang === 'en' ? definitionEn : await translateText(definitionEn, currentLang, 'en');
+          if (!localizedWord || localizedWord.length < 3) continue;
+          return { word: localizedWord, hint: localizedHint, theme: await translateText(currentLevel().theme, currentLang, 'es') };
         }
         return null;
       }
 
-      function pickOfflineWordEntry() {
+      async function pickOfflineWordEntry() {
         const words = currentLevel().words;
-        let candidates = words.filter((entry) => !usedWordsCache.has(sanitizeWord(entry.word)));
-        if (!candidates.length) candidates = words;
-        const entry = candidates[Math.floor(Math.random() * candidates.length)];
-        return { word: sanitizeWord(entry.word), hint: entry.hint };
+        const pool = words.filter((entry) => !usedWordsCache.has(`${currentLang}:${sanitizeWord(entry.word)}`));
+        const entry = (pool.length ? pool : words)[Math.floor(Math.random() * (pool.length ? pool.length : words.length))];
+        return localizeWordEntry(entry);
       }
 
       async function pickWordEntry() {
@@ -502,6 +542,7 @@
         });
       }
 
+      let currentThemeLabel = currentLevel().theme;
       function updateStatus() {
         levelEl.textContent = `${levelIndex + 1}/${MAX_LEVELS}`;
         pointsEl.textContent = `${levelPoints}/${currentLevel().targetPoints}`;
@@ -510,7 +551,7 @@
         errorsEl.textContent = String(wrongLetters.size);
         usedEl.textContent = wrongLetters.size ? [...wrongLetters].join(', ') : t('none');
         bonusEl.textContent = `+${currentLevel().bonus}s`;
-        metaEl.textContent = `${t('theme')}: ${currentLevel().theme} · ${t('difficulty')} ${levelIndex + 1}`;
+        metaEl.textContent = `${t('theme')}: ${currentThemeLabel} · ${t('difficulty')} ${levelIndex + 1}`;
       }
 
       function allLettersGuessed() { return [...secretWord].every((l) => guessedLetters.has(l)); }
@@ -519,12 +560,9 @@
       function openResultModal({ win, title, actionText, onAction, reason = '' }) {
         modalEl.classList.remove('hidden');
         modalTitleEl.textContent = title;
-        modalTextEl.textContent = `Pista: ${currentHint}${reason ? ` · ${reason}` : ''}`;
+        modalTextEl.textContent = `${t('hintPrefix')}: ${currentHint}${reason ? ` · ${reason}` : ''}`;
         modalActionBtn.textContent = actionText;
-        modalActionBtn.onclick = () => {
-          modalEl.classList.add('hidden');
-          onAction();
-        };
+        modalActionBtn.onclick = () => { modalEl.classList.add('hidden'); onAction(); };
         messageEl.textContent = t('result');
         messageEl.className = win ? 'message win' : 'message lose';
       }
@@ -541,7 +579,6 @@
         clearInterval(timerId);
         levelPoints += POINTS_PER_WORD;
         updateStatus();
-
         if (levelPoints >= currentLevel().targetPoints) {
           if (levelIndex === MAX_LEVELS - 1) {
             openResultModal({ win: true, title: t('done'), actionText: t('back1'), onAction: () => { levelIndex = 0; startLevel(); } });
@@ -550,27 +587,20 @@
           openResultModal({ win: true, title: t('levelDone'), actionText: t('nextLevel'), onAction: () => { levelIndex += 1; startLevel(); } });
           return;
         }
-
         openResultModal({ win: true, title: t('wordDone'), actionText: t('nextWord'), onAction: () => startRound() });
       }
 
       function consumeAttemptAndCheckLose(reason) {
         attemptsLeft -= 1;
         updateStatus();
-        if (attemptsLeft <= 0) {
-          finishLoss(reason);
-          return true;
-        }
+        if (attemptsLeft <= 0) { finishLoss(reason); return true; }
         return false;
       }
 
       function startTimer() {
         clearInterval(timerId);
         timerId = setInterval(() => {
-          if (gameOver) {
-            clearInterval(timerId);
-            return;
-          }
+          if (gameOver) return clearInterval(timerId);
           timeLeft -= 1;
           updateStatus();
           if (timeLeft <= 0) finishLoss(t('timeOver'));
@@ -578,15 +608,12 @@
       }
 
       function ensureTimerStarted() {
-        if (!timerStarted && !gameOver) {
-          timerStarted = true;
-          startTimer();
-        }
+        if (!timerStarted && !gameOver) { timerStarted = true; startTimer(); }
       }
 
       async function startRound() {
         gameOver = true;
-        hintEl.textContent = `Pista: ${t('hidden')}`;
+        hintEl.textContent = `${t('hintPrefix')}: ${t('hidden')}`;
         messageEl.textContent = t('loading');
         messageEl.className = 'message';
         modalEl.classList.add('hidden');
@@ -594,7 +621,8 @@
         const entry = await pickWordEntry();
         secretWord = entry.word;
         currentHint = entry.hint;
-        usedWordsCache.add(secretWord);
+        currentThemeLabel = entry.theme || currentLevel().theme;
+        usedWordsCache.add(`${currentLang}:${secretWord}`);
 
         guessedLetters = new Set();
         wrongLetters = new Set();
@@ -612,127 +640,72 @@
         guessInput.focus();
       }
 
-      function startLevel() {
-        levelPoints = 0;
-        startRound();
-      }
+      function startLevel() { levelPoints = 0; startRound(); }
 
       function handleLetterGuess(rawValue) {
         ensureTimerStarted();
         const guess = normalizeText(rawValue);
-
-        if (!/^[A-ZÑ]$/.test(guess)) {
-          messageEl.textContent = t('enterLetter');
-          messageEl.className = 'message lose';
-          return;
-        }
-
-        if (guessedLetters.has(guess) || wrongLetters.has(guess)) {
-          messageEl.textContent = t('usedLetter');
-          messageEl.className = 'message';
-          return;
-        }
-
+        if (!/^[A-ZÑ]$/.test(guess)) { messageEl.textContent = t('enterLetter'); messageEl.className = 'message lose'; return; }
+        if (guessedLetters.has(guess) || wrongLetters.has(guess)) { messageEl.textContent = t('usedLetter'); messageEl.className = 'message'; return; }
         if (secretWord.includes(guess)) {
           guessedLetters.add(guess);
           timeLeft += currentLevel().bonus;
           renderWord();
           updateStatus();
-          if (allLettersGuessed()) {
-            finishWordSolved();
-          } else {
-            messageEl.textContent = t('correctLetter', { bonus: currentLevel().bonus });
-            messageEl.className = 'message win';
-          }
+          if (allLettersGuessed()) finishWordSolved();
+          else { messageEl.textContent = t('correctLetter', { bonus: currentLevel().bonus }); messageEl.className = 'message win'; }
           return;
         }
-
         wrongLetters.add(guess);
         updateStatus();
-        const lost = consumeAttemptAndCheckLose(t('noAttempts'));
-        if (!lost) {
-          messageEl.textContent = t('wrongLetter');
-          messageEl.className = 'message lose';
-        }
+        if (!consumeAttemptAndCheckLose(t('noAttempts'))) { messageEl.textContent = t('wrongLetter'); messageEl.className = 'message lose'; }
       }
 
       function handleWordGuess(rawValue) {
         ensureTimerStarted();
         const guessWord = normalizeText(rawValue);
-
-        if (!guessWord || !/^[A-ZÑ]+$/.test(guessWord)) {
-          messageEl.textContent = t('invalidWord');
-          messageEl.className = 'message lose';
-          return;
-        }
-
-        if (guessWord === secretWord) {
-          revealWord();
-          updateStatus();
-          finishWordSolved();
-          return;
-        }
-
-        const lost = consumeAttemptAndCheckLose(t('noAttempts'));
-        if (!lost) {
-          messageEl.textContent = t('wrongWord');
-          messageEl.className = 'message lose';
-        }
+        if (!guessWord || !/^[A-ZÑ]+$/.test(guessWord)) { messageEl.textContent = t('invalidWord'); messageEl.className = 'message lose'; return; }
+        if (guessWord === secretWord) { revealWord(); updateStatus(); finishWordSolved(); return; }
+        if (!consumeAttemptAndCheckLose(t('noAttempts'))) { messageEl.textContent = t('wrongWord'); messageEl.className = 'message lose'; }
       }
 
       guessForm.addEventListener('submit', (event) => {
         event.preventDefault();
         if (gameOver) return;
-
         const value = guessInput.value;
         guessInput.value = '';
         guessInput.focus();
-
         const normalized = normalizeText(value);
-        if (!normalized) {
-          messageEl.textContent = t('invalidInput');
-          messageEl.className = 'message lose';
-          return;
-        }
-
-        if (normalized.length === 1) handleLetterGuess(normalized);
-        else handleWordGuess(normalized);
+        if (!normalized) { messageEl.textContent = t('invalidInput'); messageEl.className = 'message lose'; return; }
+        if (normalized.length === 1) handleLetterGuess(normalized); else handleWordGuess(normalized);
       });
 
       hintBtn.addEventListener('click', () => {
         if (gameOver) return;
         ensureTimerStarted();
-
-        if (hintUsed) {
-          messageEl.textContent = t('hintAlready');
-          messageEl.className = 'message';
-          return;
-        }
-
+        if (hintUsed) { messageEl.textContent = t('hintAlready'); messageEl.className = 'message'; return; }
         hintUsed = true;
-        hintEl.textContent = `Pista: ${currentHint}`;
-
-        const lost = consumeAttemptAndCheckLose(t('noAttempts'));
-        if (!lost) {
-          messageEl.textContent = t('hintUsed');
-          messageEl.className = 'message';
-        }
+        hintEl.textContent = `${t('hintPrefix')}: ${currentHint}`;
+        if (!consumeAttemptAndCheckLose(t('noAttempts'))) { messageEl.textContent = t('hintUsed'); messageEl.className = 'message'; }
       });
 
-      restartBtn.addEventListener('click', () => {
-        startLevel();
-        ensureTimerStarted();
+      restartBtn.addEventListener('click', () => { startLevel(); ensureTimerStarted(); });
+
+      themeBtn.addEventListener('click', () => {
+        setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        applyLanguage();
       });
 
       langButtons.forEach((btn) => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
           currentLang = btn.dataset.lang || 'es';
+          usedWordsCache.clear();
           applyLanguage();
-          updateStatus();
-          if (hintUsed) hintEl.textContent = `Pista: ${currentHint}`;
+          await startRound();
         });
       });
 
+      setTheme('dark');
       applyLanguage();
       startLevel();
     </script>
