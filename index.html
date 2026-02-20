@@ -712,12 +712,13 @@
         const mid = cleanWord[Math.floor(cleanWord.length / 2)] || first;
         const vowels = [...cleanWord].filter((ch) => 'AEIOU'.includes(ch)).length;
         const dbClues = WORD_CLUE_DB[cleanWord] || [];
+        const specificHint = fullHint || t('hidden');
 
-        const level1 = dbClues[0] || `Pertenece al ámbito de ${currentThemeLabel}.`;
-        const level2 = dbClues[1] || `Comienza con "${first}" y termina con "${last}".`;
+        const level1 = dbClues[0] || specificHint;
+        const level2 = dbClues[1] || t('hintL2', { first, last });
         const level3 = t('hintL3', { vowels });
         const level4 = t('hintL4', { mid });
-        const level5 = t('hintL5', { full: fullHint || t('hidden') });
+        const level5 = t('hintL5', { full: specificHint });
         return [level1, level2, level3, level4, level5];
       }
 

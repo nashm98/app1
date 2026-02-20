@@ -26,7 +26,8 @@ Juego web tipo ahorcado con **20 niveles**, tiempo limitado y progreso por punto
 - Botón de pista: permite hasta 5 pistas por palabra y resta puntos acumulados: `-1`, `-3`, `-5`, `-7`, `-9`.
 - No se permiten puntos negativos: si no alcanzan los puntos para una pista, se bloquea con mensaje de puntos insuficientes.
 - Para pedir desde la 2ª pista en adelante, primero debes acertar al menos una letra.
-- Las pistas se muestran en varios niveles con frases completas y más específicas por palabra (categoría útil, forma de la palabra, vocales, letra media y pista completa).
+- Las pistas se muestran en varios niveles con frases completas y más específicas por palabra (definición real, forma de la palabra, vocales, letra media y pista completa).
+- La primera pista prioriza la definición real de la palabra para evitar mensajes genéricos.
 
 ## Generación de palabras
 
