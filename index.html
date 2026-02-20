@@ -553,9 +553,13 @@
         return localizeWordEntry(entry);
       }
 
+      function shouldUseOnlineMode() {
+        return ONLINE_MODE && currentLang !== 'es';
+      }
+
       async function pickWordEntry() {
         try {
-          if (ONLINE_MODE) {
+          if (shouldUseOnlineMode()) {
             const online = await fetchOnlineWordEntry();
             if (online) return online;
           }

@@ -24,7 +24,8 @@ Juego web tipo ahorcado con **20 niveles**, tiempo limitado y progreso por punto
 
 ## Generación de palabras
 
-- **Modo online**: intenta obtener palabras aleatorias desde APIs públicas.
+- **Modo online**: intenta obtener palabras aleatorias desde APIs públicas en idiomas no-español.
+- En **español** se fuerza el vocabulario local del juego para evitar que aparezcan palabras en inglés.
 - **Cache anti-repetición**: evita repetir palabras durante la sesión por idioma.
 - **Fallback offline**: si falla la conexión/API, usa automáticamente el pool local del nivel.
 - Las palabras y pistas se adaptan al idioma elegido (es/en/pt).
