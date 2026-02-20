@@ -14,6 +14,7 @@ Juego web tipo ahorcado con **20 niveles de dificultad** y tiempo limitado.
    - Letra incorrecta: descuenta 1 intento.
    - Palabra incorrecta: descuenta 1 intento y muestra definición de la palabra del nivel.
    - Intento de palabra (acierto o fallo): muestra definición/uso de la palabra del nivel.
+   - Al perder o al superar el nivel, también se muestra la definición de la palabra del nivel.
    - Usar **PISTA**: muestra ayuda y descuenta 1 intento.
 4. Al completar un nivel, usa **Siguiente nivel** hasta llegar al 20.
 

@@ -332,19 +332,22 @@
         gameOver = true;
         clearInterval(timerId);
 
+        const definitionText = `Definición: ${currentLevel().hint}`;
+        hintEl.textContent = definitionText;
+
         if (win) {
           if (levelIndex === MAX_LEVELS - 1) {
-            messageEl.textContent = '¡Ganaste el nivel 20! Completaste todo el juego. 🎉';
+            messageEl.textContent = `¡Ganaste el nivel 20! Completaste todo el juego. 🎉 ${definitionText}`;
             nextBtn.hidden = true;
           } else {
-            messageEl.textContent = '¡Nivel superado! Puedes pasar al siguiente.';
+            messageEl.textContent = `¡Nivel superado! Puedes pasar al siguiente. ${definitionText}`;
             nextBtn.hidden = false;
           }
           messageEl.className = 'message win';
           return;
         }
 
-        messageEl.textContent = `Perdiste${reason ? ` (${reason})` : ''}. La palabra era ${secretWord}.`;
+        messageEl.textContent = `Perdiste${reason ? ` (${reason})` : ''}. La palabra era ${secretWord}. ${definitionText}`;
         messageEl.className = 'message lose';
         nextBtn.hidden = true;
         revealWord();
