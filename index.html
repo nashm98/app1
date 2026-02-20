@@ -572,13 +572,8 @@
         timerStarted = false;
         hintUsed = false;
 
-        if (entry.source === 'online') {
-          messageEl.textContent = 'Modo online activo: palabra aleatoria nueva.';
-          messageEl.className = 'message win';
-        } else {
-          messageEl.textContent = 'Modo offline (fallback): no hubo conexión estable a la fuente online.';
-          messageEl.className = 'message';
-        }
+        messageEl.textContent = 'Nueva palabra cargada. ¡A jugar!';
+        messageEl.className = 'message';
 
         renderWord();
         updateStatus();
