@@ -15,7 +15,7 @@ Juego web tipo ahorcado con **20 niveles**, tiempo limitado y progreso por punto
 
 ## Reglas clave
 
-- Para pasar de nivel debes **acumular puntos** (varias palabras correctas), no solo acertar una.
+- Para pasar de nivel debes **acumular puntos** (varias palabras correctas), no solo acertar una; el objetivo de puntos sube progresivamente por nivel.
 - La complejidad de palabra aumenta con el nivel, pero con longitudes variadas dentro de cada nivel para mayor aleatoriedad.
 - Cada palabra acertada suma 1 punto al progreso del nivel.
 - Si aciertas una palabra sin usar pistas, recibes 1 punto extra de bonificación.
@@ -23,10 +23,10 @@ Juego web tipo ahorcado con **20 niveles**, tiempo limitado y progreso por punto
 - Letra correcta: revela posiciones y suma tiempo extra.
 - Letra incorrecta: descuenta 1 intento y activa una animación breve de vibración/destello rojo.
 - Palabra incorrecta: descuenta 1 intento.
-- Botón de pista: permite hasta 3 pistas por palabra y resta puntos acumulados: 1ª `-1`, 2ª `-3`, 3ª `-5`.
+- Botón de pista: permite hasta 5 pistas por palabra y resta puntos acumulados: `-1`, `-3`, `-5`, `-7`, `-9`.
 - No se permiten puntos negativos: si no alcanzan los puntos para una pista, se bloquea con mensaje de puntos insuficientes.
-- Para pedir la 2ª y 3ª pista, primero debes acertar al menos una letra.
-- Las pistas se muestran en 3 niveles con frases completas para evitar textos cortados.
+- Para pedir desde la 2ª pista en adelante, primero debes acertar al menos una letra.
+- Las pistas se muestran en varios niveles con frases completas y más específicas para evitar generalidades.
 
 ## Generación de palabras
 
