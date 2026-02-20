@@ -10,6 +10,7 @@ Juego web tipo ahorcado con **20 niveles**, tiempo limitado y progreso por punto
    - Si escribes más de 1 carácter, se toma como intento de palabra completa.
 3. Usa el selector de idioma con bandera + texto (**🇪🇸 Español, 🇬🇧 English, 🇵🇹 Português**).
 4. Usa el botón ☀️/🌙 para alternar entre modo día y modo nocturno.
+5. Los popups de resultado también respetan el tema seleccionado (claro/oscuro).
 
 ## Reglas clave
 
@@ -27,6 +28,7 @@ Juego web tipo ahorcado con **20 niveles**, tiempo limitado y progreso por punto
 
 - **Modo online**: intenta obtener palabras aleatorias desde APIs públicas en inglés.
 - En **español** se fuerza el vocabulario local del juego para evitar que aparezcan palabras en inglés.
+- **Diccionario ampliado**: se añadieron más palabras por nivel (especialmente en español) para reducir repeticiones.
 - **Cache anti-repetición**: evita repetir palabras durante la sesión por idioma.
 - **Fallback offline**: si falla la conexión/API, usa automáticamente el pool local del nivel.
 - Las palabras y pistas se adaptan al idioma elegido (es/en/pt), usando vocabulario local en español y portugués para mantener consistencia.

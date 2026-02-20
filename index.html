@@ -22,6 +22,9 @@
         --btn-hint-text: #1a0e00;
         --btn-restart: linear-gradient(135deg, #334155 0%, #1f2937 100%);
         --btn-restart-text: #f8fbff;
+        --modal-overlay: rgb(2 6 23 / 0.72);
+        --modal-bg: linear-gradient(165deg, #10192e 0%, #1a2742 100%);
+        --modal-border: #35507e;
       }
 
       :root[data-theme='light'] {
@@ -41,6 +44,9 @@
         --btn-hint-text: #111827;
         --btn-restart: linear-gradient(135deg, #1f2937 0%, #111827 100%);
         --btn-restart-text: #ffffff;
+        --modal-overlay: rgb(15 23 42 / 0.24);
+        --modal-bg: linear-gradient(165deg, #ffffff 0%, #eef3ff 100%);
+        --modal-border: #93c5fd;
       }
 
       body {
@@ -267,7 +273,7 @@
       .modal {
         position: fixed;
         inset: 0;
-        background: rgb(2 6 23 / 0.72);
+        background: var(--modal-overlay);
         backdrop-filter: blur(3px);
         display: grid;
         place-items: center;
@@ -279,8 +285,8 @@
 
       .modal-card {
         width: min(560px, 100%);
-        background: linear-gradient(165deg, #10192e 0%, #1a2742 100%);
-        border: 1px solid #35507e;
+        background: var(--modal-bg);
+        border: 1px solid var(--modal-border);
         border-radius: 16px;
         box-shadow: 0 20px 60px rgb(0 0 0 / 0.6);
         padding: 20px;
@@ -371,6 +377,30 @@
         { theme: 'biología', bonus: 2, targetPoints: 3, words: [{ word: 'GENETICA', hint: 'Estudia herencia biológica.' }, { word: 'MITOCONDRIA', hint: 'Organelo que produce energía celular.' }, { word: 'NEUROPLASTICIDAD', hint: 'Capacidad del cerebro para adaptarse.' }] },
         { theme: 'física', bonus: 2, targetPoints: 3, words: [{ word: 'INERCIA', hint: 'Tendencia a mantener estado de movimiento.' }, { word: 'GRAVEDAD', hint: 'Fuerza de atracción entre masas.' }, { word: 'TERMODINAMICA', hint: 'Estudia calor y energía.' }] },
         { theme: 'educación', bonus: 2, targetPoints: 3, words: [{ word: 'PEDAGOGIA', hint: 'Disciplina sobre enseñanza.' }, { word: 'CURRICULO', hint: 'Plan de estudios estructurado.' }, { word: 'INTERDISCIPLINARIO', hint: 'Integra varias áreas de conocimiento.' }] },
+      ];
+
+
+      const EXTRA_WORDS_ES = [
+        [{ word: 'LUZ', hint: 'Permite ver los objetos.' }, { word: 'MAR', hint: 'Gran masa de agua salada.' }],
+        [{ word: 'PATIO', hint: 'Espacio abierto de una casa.' }, { word: 'TECHO', hint: 'Parte superior que cubre una casa.' }],
+        [{ word: 'VASO', hint: 'Recipiente para beber líquidos.' }, { word: 'LIBRO', hint: 'Conjunto de hojas para leer.' }],
+        [{ word: 'BARRIO', hint: 'Zona de una ciudad.' }, { word: 'PUENTE', hint: 'Construcción para cruzar un río o calle.' }],
+        [{ word: 'TORTUGA', hint: 'Animal con caparazón.' }, { word: 'CABALLO', hint: 'Animal doméstico usado para montar.' }],
+        [{ word: 'REGLA', hint: 'Instrumento para medir y trazar líneas.' }, { word: 'TIJERA', hint: 'Herramienta para cortar.' }],
+        [{ word: 'AVION', hint: 'Medio de transporte aéreo.' }, { word: 'CARRETERA', hint: 'Vía para circular entre ciudades.' }],
+        [{ word: 'INVIERNO', hint: 'Estación del año más fría.' }, { word: 'MINUTO', hint: 'Unidad de tiempo de 60 segundos.' }],
+        [{ word: 'CASCADA', hint: 'Caída de agua en un río.' }, { word: 'PRADERA', hint: 'Terreno cubierto de hierba.' }],
+        [{ word: 'FARMACIA', hint: 'Lugar donde se venden medicamentos.' }, { word: 'CIRUGIA', hint: 'Procedimiento médico quirúrgico.' }],
+        [{ word: 'PLANETA', hint: 'Cuerpo celeste que orbita una estrella.' }, { word: 'MOLECULA', hint: 'Conjunto de átomos enlazados.' }],
+        [{ word: 'JUSTICIA', hint: 'Principio de dar a cada uno lo que corresponde.' }, { word: 'SOLIDARIDAD', hint: 'Apoyo mutuo entre personas.' }],
+        [{ word: 'COLONIA', hint: 'Territorio dominado por otro país en el pasado.' }, { word: 'TRATADO', hint: 'Acuerdo formal entre naciones.' }],
+        [{ word: 'COMPOSTAJE', hint: 'Proceso para convertir residuos orgánicos en abono.' }, { word: 'REFORESTACION', hint: 'Acción de volver a plantar árboles.' }],
+        [{ word: 'ALGEBRA', hint: 'Rama matemática que usa símbolos.' }, { word: 'ESTADISTICA', hint: 'Estudio de datos y probabilidades.' }],
+        [{ word: 'ORTOGRAFIA', hint: 'Conjunto de reglas para escribir correctamente.' }, { word: 'NARRATIVA', hint: 'Forma de contar una historia.' }],
+        [{ word: 'PRESUPUESTO', hint: 'Plan estimado de ingresos y gastos.' }, { word: 'RENTABILIDAD', hint: 'Capacidad de generar ganancias.' }],
+        [{ word: 'CITOPLASMA', hint: 'Sustancia interna de la célula.' }, { word: 'HOMEOSTASIS', hint: 'Equilibrio interno de un organismo.' }],
+        [{ word: 'ACELERACION', hint: 'Cambio de velocidad en el tiempo.' }, { word: 'ELECTROMAGNETISMO', hint: 'Interacción entre electricidad y magnetismo.' }],
+        [{ word: 'METODOLOGIA', hint: 'Conjunto de métodos usados en una disciplina.' }, { word: 'INVESTIGACION', hint: 'Proceso sistemático para obtener conocimiento.' }],
       ];
 
       const WORD_LENGTH_RULES = [
@@ -509,6 +539,7 @@
       const usedWordsCache = new Set();
       const definitionCache = new Map();
       const translationCache = new Map();
+      const offlineBagCache = new Map();
 
       const t = (key, vars = {}) => {
         let text = (I18N[currentLang] && I18N[currentLang][key]) || I18N.es[key] || key;
@@ -647,9 +678,21 @@
       }
 
       async function pickOfflineWordEntry() {
-        const words = currentLevel().words;
-        const pool = words.filter((entry) => !usedWordsCache.has(`${currentLang}:${sanitizeWord(entry.word)}`) && isWordLengthAllowed(entry.word));
-        const entry = (pool.length ? pool : words)[Math.floor(Math.random() * (pool.length ? pool.length : words.length))];
+        const baseWords = [...currentLevel().words];
+        if (currentLang === 'es') baseWords.push(...(EXTRA_WORDS_ES[levelIndex] || []));
+
+        const eligible = baseWords.filter((entry) => isWordLengthAllowed(entry.word));
+        const words = eligible.length ? eligible : baseWords;
+        const bagKey = `${currentLang}:${levelIndex}`;
+
+        let bag = offlineBagCache.get(bagKey);
+        if (!bag || !bag.length) {
+          bag = [...words].sort(() => Math.random() - 0.5);
+          offlineBagCache.set(bagKey, bag);
+        }
+
+        const entry = bag.pop() || words[Math.floor(Math.random() * words.length)];
+        offlineBagCache.set(bagKey, bag);
         return localizeWordEntry(entry);
       }
 
@@ -855,6 +898,7 @@
         btn.addEventListener('click', async () => {
           currentLang = btn.dataset.lang || 'es';
           usedWordsCache.clear();
+          offlineBagCache.clear();
           applyLanguage();
           await startRound();
         });
