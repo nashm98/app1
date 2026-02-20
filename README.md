@@ -5,10 +5,11 @@ Juego web tipo ahorcado con **20 niveles de dificultad** y tiempo limitado.
 ## Cómo jugar
 
 1. Abre `index.html` en tu navegador.
-2. En cada nivel puedes:
-   - Probar **una letra**.
-   - Probar **la palabra completa**.
+2. En cada nivel hay **un único campo de ingreso**:
+   - Escribe una sola letra y pulsa **Probar letra**.
+   - O escribe una palabra completa y pulsa **Probar palabra**.
 3. Reglas:
+   - El tiempo comienza en la **primera acción** (probar letra, probar palabra o pulsar algún botón).
    - Letra correcta: revela posiciones y suma tiempo extra.
    - Letra incorrecta: descuenta 1 intento.
    - Palabra incorrecta: descuenta 1 intento.
