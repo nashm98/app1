@@ -5,7 +5,7 @@ Juego web tipo ahorcado con **20 niveles**, tiempo limitado y progreso por punto
 ## Cómo jugar
 
 1. Abre `index.html` en tu navegador.
-2. En cada nivel hay **un único campo de ingreso** y un botón (`Probar intento`):
+2. En cada nivel hay **un único campo de ingreso** y un botón (`▶`):
    - Si escribes 1 carácter, se toma como intento de letra.
    - Si escribes más de 1 carácter, se toma como intento de palabra completa.
 
@@ -18,7 +18,7 @@ Juego web tipo ahorcado con **20 niveles**, tiempo limitado y progreso por punto
 - Letra correcta: revela posiciones y suma tiempo extra.
 - Letra incorrecta: descuenta 1 intento.
 - Palabra incorrecta: descuenta 1 intento.
-- Usar **PISTA**: muestra ayuda y descuenta 1 intento.
+- Botón **PISTA (-1)**: muestra ayuda y descuenta 1 intento.
 
 ## Popup de resultado
 
