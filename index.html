@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Adivina la palabra</title>
+    <title>Adivina la palabra por niveles</title>
     <style>
       :root {
         color-scheme: light dark;
@@ -13,6 +13,7 @@
         --accent: #38bdf8;
         --good: #22c55e;
         --bad: #ef4444;
+        --muted: #94a3b8;
       }
 
       body {
@@ -27,7 +28,7 @@
       }
 
       .game {
-        width: min(720px, 100%);
+        width: min(860px, 100%);
         background: color-mix(in srgb, var(--panel) 88%, black);
         border: 1px solid #334155;
         border-radius: 18px;
@@ -36,27 +37,33 @@
       }
 
       h1 {
-        margin-top: 0;
+        margin: 0 0 14px;
         text-align: center;
       }
 
       .status {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(5, minmax(0, 1fr));
         gap: 10px;
-        margin-bottom: 18px;
+        margin-bottom: 16px;
       }
 
       .card {
         background: #0f172a;
         border-radius: 12px;
-        padding: 12px;
+        padding: 10px;
         text-align: center;
       }
 
       .card strong {
         display: block;
-        font-size: 1.45rem;
+        font-size: 1.25rem;
+      }
+
+      .meta {
+        text-align: center;
+        color: var(--muted);
+        margin-bottom: 8px;
       }
 
       .word {
@@ -64,7 +71,7 @@
         justify-content: center;
         flex-wrap: wrap;
         gap: 8px;
-        margin: 16px 0 22px;
+        margin: 14px 0 20px;
       }
 
       .letter {
@@ -73,11 +80,18 @@
         border-bottom: 3px solid var(--accent);
         display: grid;
         place-items: center;
-        font-size: 1.7rem;
+        font-size: 1.5rem;
         font-weight: 700;
       }
 
-      form {
+      .forms {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      form,
+      .actions {
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
@@ -85,9 +99,8 @@
       }
 
       input {
-        width: 64px;
         text-align: center;
-        font-size: 1.3rem;
+        font-size: 1.05rem;
         text-transform: uppercase;
         border-radius: 10px;
         border: 1px solid #475569;
@@ -96,11 +109,19 @@
         color: var(--text);
       }
 
+      #guess-letter {
+        width: 64px;
+      }
+
+      #guess-word {
+        width: min(320px, 100%);
+      }
+
       button {
         border: 0;
         border-radius: 10px;
         padding: 10px 14px;
-        font-size: 1rem;
+        font-size: 0.95rem;
         font-weight: 600;
         cursor: pointer;
       }
@@ -115,13 +136,29 @@
         color: var(--text);
       }
 
-      .history {
-        margin-top: 15px;
+      .hint-btn {
+        background: #f59e0b;
+        color: #2d1700;
+      }
+
+      .next-btn {
+        background: #22c55e;
+        color: #032612;
+      }
+
+      .history,
+      .hint {
+        margin-top: 12px;
         text-align: center;
       }
 
+      .hint {
+        color: #fde68a;
+        min-height: 1.4em;
+      }
+
       .message {
-        margin-top: 12px;
+        margin-top: 10px;
         text-align: center;
         min-height: 1.4em;
         font-weight: 600;
@@ -134,53 +171,83 @@
       .lose {
         color: var(--bad);
       }
+
+      @media (max-width: 760px) {
+        .status {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .forms {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
   </head>
   <body>
     <main class="game">
-      <h1>Adivina la palabra ⏳</h1>
+      <h1>Adivina la palabra por niveles ⏳</h1>
+      <p class="meta" id="meta"></p>
 
       <section class="status">
-        <div class="card">
-          Tiempo
-          <strong id="time">45</strong>
-        </div>
-        <div class="card">
-          Intentos
-          <strong id="attempts">7</strong>
-        </div>
-        <div class="card">
-          Errores
-          <strong id="errors">0</strong>
-        </div>
+        <div class="card">Nivel<strong id="level">1/20</strong></div>
+        <div class="card">Tiempo<strong id="time">45</strong></div>
+        <div class="card">Intentos<strong id="attempts">7</strong></div>
+        <div class="card">Errores<strong id="errors">0</strong></div>
+        <div class="card">+Tiempo letra<strong id="bonus">+4s</strong></div>
       </section>
 
       <section class="word" id="word" aria-label="Palabra a adivinar"></section>
 
-      <form id="guess-form">
-        <input id="guess-input" type="text" maxlength="1" autocomplete="off" required aria-label="Escribe una letra" />
-        <button class="guess-btn" type="submit">Probar letra</button>
-        <button class="restart-btn" id="restart-btn" type="button">Nueva partida</button>
-      </form>
+      <section class="forms">
+        <form id="letter-form">
+          <input id="guess-letter" type="text" maxlength="1" autocomplete="off" required aria-label="Escribe una letra" />
+          <button class="guess-btn" type="submit">Probar letra</button>
+        </form>
+
+        <form id="word-form">
+          <input id="guess-word" type="text" autocomplete="off" required aria-label="Escribe la palabra completa" placeholder="Intenta la palabra completa" />
+          <button class="guess-btn" type="submit">Probar palabra</button>
+        </form>
+      </section>
+
+      <div class="actions">
+        <button class="hint-btn" id="hint-btn" type="button">Usar pista (-1 intento)</button>
+        <button class="restart-btn" id="restart-btn" type="button">Reiniciar nivel</button>
+        <button class="next-btn" id="next-btn" type="button" hidden>Siguiente nivel</button>
+      </div>
 
       <p class="history">Letras usadas: <span id="used">(ninguna)</span></p>
+      <p class="hint" id="hint">Pista: (oculta)</p>
       <p class="message" id="message"></p>
     </main>
 
     <script>
-      const WORDS = [
-        'javascript',
-        'programacion',
-        'algoritmo',
-        'internet',
-        'tecnologia',
-        'frontend',
-        'desarrollo',
-        'computadora',
+      const LEVELS = [
+        { word: 'CASA', hint: 'Lugar donde vives.', theme: 'vida diaria', bonus: 4 },
+        { word: 'PERRO', hint: 'Animal doméstico muy común.', theme: 'animales', bonus: 4 },
+        { word: 'MESA', hint: 'Mueble para comer o trabajar.', theme: 'hogar', bonus: 4 },
+        { word: 'LLAVE', hint: 'Sirve para abrir una puerta.', theme: 'objetos', bonus: 4 },
+        { word: 'PARQUE', hint: 'Espacio verde para caminar o jugar.', theme: 'ciudad', bonus: 4 },
+        { word: 'BICICLETA', hint: 'Transporte de dos ruedas.', theme: 'movilidad', bonus: 4 },
+        { word: 'CALENDARIO', hint: 'Organiza días, semanas y meses.', theme: 'tiempo', bonus: 3 },
+        { word: 'MURCIELAGO', hint: 'Mamífero que vuela de noche.', theme: 'naturaleza', bonus: 3 },
+        { word: 'VOLCAN', hint: 'Montaña que puede expulsar lava.', theme: 'geografía', bonus: 3 },
+        { word: 'HOSPITAL', hint: 'Lugar de atención médica.', theme: 'salud', bonus: 3 },
+        { word: 'ECLIPSE', hint: 'Fenómeno astronómico entre astros.', theme: 'ciencia', bonus: 3 },
+        { word: 'DEMOCRACIA', hint: 'Sistema político de participación ciudadana.', theme: 'sociedad', bonus: 3 },
+        { word: 'ARQUEOLOGIA', hint: 'Estudia culturas antiguas por restos materiales.', theme: 'historia', bonus: 2 },
+        { word: 'BIODIVERSIDAD', hint: 'Variedad de especies en un ecosistema.', theme: 'ecología', bonus: 2 },
+        { word: 'HIPOTENUSA', hint: 'Lado mayor en un triángulo rectángulo.', theme: 'matemática', bonus: 2 },
+        { word: 'METAFORA', hint: 'Figura literaria que compara sin "como".', theme: 'lengua', bonus: 2 },
+        { word: 'CRIPTOMONEDA', hint: 'Activo digital basado en criptografía.', theme: 'finanzas', bonus: 2 },
+        { word: 'NEUROPLASTICIDAD', hint: 'Capacidad del cerebro de adaptarse.', theme: 'biología', bonus: 2 },
+        { word: 'TERMODINAMICA', hint: 'Rama de la física sobre calor y energía.', theme: 'física', bonus: 2 },
+        { word: 'INTERDISCIPLINARIO', hint: 'Integra conocimientos de distintas áreas.', theme: 'educación', bonus: 2 },
       ];
 
-      const MAX_ATTEMPTS = 7;
-      const START_TIME = 45;
+      const MAX_LEVELS = LEVELS.length;
+      const BASE_ATTEMPTS = 8;
+      const BASE_TIME = 55;
 
       const wordEl = document.getElementById('word');
       const timeEl = document.getElementById('time');
@@ -188,20 +255,45 @@
       const errorsEl = document.getElementById('errors');
       const usedEl = document.getElementById('used');
       const messageEl = document.getElementById('message');
-      const form = document.getElementById('guess-form');
-      const input = document.getElementById('guess-input');
-      const restartBtn = document.getElementById('restart-btn');
+      const hintEl = document.getElementById('hint');
+      const levelEl = document.getElementById('level');
+      const metaEl = document.getElementById('meta');
+      const bonusEl = document.getElementById('bonus');
 
+      const letterForm = document.getElementById('letter-form');
+      const wordForm = document.getElementById('word-form');
+      const guessLetterInput = document.getElementById('guess-letter');
+      const guessWordInput = document.getElementById('guess-word');
+      const hintBtn = document.getElementById('hint-btn');
+      const restartBtn = document.getElementById('restart-btn');
+      const nextBtn = document.getElementById('next-btn');
+
+      let levelIndex = 0;
       let secretWord = '';
       let guessedLetters = new Set();
       let wrongLetters = new Set();
-      let attemptsLeft = MAX_ATTEMPTS;
-      let timeLeft = START_TIME;
+      let attemptsLeft = BASE_ATTEMPTS;
+      let timeLeft = BASE_TIME;
       let timerId;
       let gameOver = false;
+      let hintUsed = false;
 
-      function pickWord() {
-        return WORDS[Math.floor(Math.random() * WORDS.length)].toUpperCase();
+      function currentLevel() {
+        return LEVELS[levelIndex];
+      }
+
+      function levelAttempts(index) {
+        if (index < 6) return 8;
+        if (index < 12) return 7;
+        if (index < 17) return 6;
+        return 5;
+      }
+
+      function levelTime(index) {
+        if (index < 6) return 55;
+        if (index < 12) return 50;
+        if (index < 17) return 45;
+        return 40;
       }
 
       function renderWord() {
@@ -215,14 +307,25 @@
       }
 
       function updateStatus() {
+        const level = currentLevel();
+        levelEl.textContent = `${levelIndex + 1}/${MAX_LEVELS}`;
         timeEl.textContent = String(timeLeft);
         attemptsEl.textContent = String(attemptsLeft);
         errorsEl.textContent = String(wrongLetters.size);
         usedEl.textContent = wrongLetters.size ? [...wrongLetters].join(', ') : '(ninguna)';
+        bonusEl.textContent = `+${level.bonus}s`;
+        metaEl.textContent = `Tema: ${level.theme} · Dificultad ${levelIndex + 1}`;
       }
 
       function allLettersGuessed() {
         return [...secretWord].every((letter) => guessedLetters.has(letter));
+      }
+
+      function revealWord() {
+        for (const letter of secretWord) {
+          guessedLetters.add(letter);
+        }
+        renderWord();
       }
 
       function finishGame(win, reason = '') {
@@ -230,18 +333,31 @@
         clearInterval(timerId);
 
         if (win) {
-          messageEl.textContent = '¡Ganaste! Adivinaste la palabra.';
+          if (levelIndex === MAX_LEVELS - 1) {
+            messageEl.textContent = '¡Ganaste el nivel 20! Completaste todo el juego. 🎉';
+            nextBtn.hidden = true;
+          } else {
+            messageEl.textContent = '¡Nivel superado! Puedes pasar al siguiente.';
+            nextBtn.hidden = false;
+          }
           messageEl.className = 'message win';
           return;
         }
 
         messageEl.textContent = `Perdiste${reason ? ` (${reason})` : ''}. La palabra era ${secretWord}.`;
         messageEl.className = 'message lose';
+        nextBtn.hidden = true;
+        revealWord();
+      }
 
-        for (const letter of secretWord) {
-          guessedLetters.add(letter);
+      function consumeAttemptAndCheckLose(reason) {
+        attemptsLeft -= 1;
+        updateStatus();
+        if (attemptsLeft <= 0) {
+          finishGame(false, reason);
+          return true;
         }
-        renderWord();
+        return false;
       }
 
       function startTimer() {
@@ -261,37 +377,48 @@
         }, 1000);
       }
 
-      function startGame() {
-        secretWord = pickWord();
+      function startLevel() {
+        const level = currentLevel();
+        secretWord = level.word.toUpperCase();
         guessedLetters = new Set();
         wrongLetters = new Set();
-        attemptsLeft = MAX_ATTEMPTS;
-        timeLeft = START_TIME;
+        attemptsLeft = levelAttempts(levelIndex);
+        timeLeft = levelTime(levelIndex);
         gameOver = false;
+        hintUsed = false;
 
-        messageEl.textContent = 'Adivina la palabra antes de que termine el tiempo.';
+        hintEl.textContent = 'Pista: (oculta)';
+        messageEl.textContent = 'Puedes adivinar por letra o por palabra completa.';
         messageEl.className = 'message';
+        nextBtn.hidden = true;
 
         renderWord();
         updateStatus();
         startTimer();
-        input.value = '';
-        input.focus();
+
+        guessLetterInput.value = '';
+        guessWordInput.value = '';
+        guessLetterInput.focus();
       }
 
-      form.addEventListener('submit', (event) => {
+      function normalizeText(value) {
+        return value
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toUpperCase()
+          .trim();
+      }
+
+      letterForm.addEventListener('submit', (event) => {
         event.preventDefault();
+        if (gameOver) return;
 
-        if (gameOver) {
-          return;
-        }
-
-        const guess = input.value.trim().toUpperCase();
-        input.value = '';
-        input.focus();
+        const guess = normalizeText(guessLetterInput.value);
+        guessLetterInput.value = '';
+        guessLetterInput.focus();
 
         if (!/^[A-ZÑ]$/.test(guess)) {
-          messageEl.textContent = 'Ingresa solo una letra.';
+          messageEl.textContent = 'Ingresa solo una letra válida.';
           messageEl.className = 'message lose';
           return;
         }
@@ -304,30 +431,83 @@
 
         if (secretWord.includes(guess)) {
           guessedLetters.add(guess);
+          timeLeft += currentLevel().bonus;
           renderWord();
+          updateStatus();
 
           if (allLettersGuessed()) {
             finishGame(true);
           } else {
-            messageEl.textContent = '¡Bien! Esa letra existe.';
+            messageEl.textContent = `¡Correcta! Ganaste +${currentLevel().bonus}s.`;
             messageEl.className = 'message win';
           }
         } else {
           wrongLetters.add(guess);
-          attemptsLeft -= 1;
           updateStatus();
-
-          if (attemptsLeft <= 0) {
-            finishGame(false, 'sin intentos');
-          } else {
-            messageEl.textContent = 'Esa letra no está en la palabra.';
+          const isLost = consumeAttemptAndCheckLose('sin intentos');
+          if (!isLost) {
+            messageEl.textContent = 'Letra incorrecta: -1 intento.';
             messageEl.className = 'message lose';
           }
         }
       });
 
-      restartBtn.addEventListener('click', startGame);
-      startGame();
+      wordForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (gameOver) return;
+
+        const guessWord = normalizeText(guessWordInput.value);
+        guessWordInput.value = '';
+
+        if (!guessWord || !/^[A-ZÑ]+$/.test(guessWord)) {
+          messageEl.textContent = 'Ingresa una palabra válida (solo letras).';
+          messageEl.className = 'message lose';
+          return;
+        }
+
+        if (guessWord === secretWord) {
+          revealWord();
+          updateStatus();
+          finishGame(true);
+          return;
+        }
+
+        const isLost = consumeAttemptAndCheckLose('sin intentos');
+        if (!isLost) {
+          messageEl.textContent = 'Palabra incorrecta: -1 intento.';
+          messageEl.className = 'message lose';
+        }
+      });
+
+      hintBtn.addEventListener('click', () => {
+        if (gameOver) return;
+
+        if (hintUsed) {
+          messageEl.textContent = 'Ya usaste la pista en este nivel.';
+          messageEl.className = 'message';
+          return;
+        }
+
+        hintUsed = true;
+        hintEl.textContent = `Pista: ${currentLevel().hint}`;
+
+        const isLost = consumeAttemptAndCheckLose('te quedaste sin intentos por usar pista');
+        if (!isLost) {
+          messageEl.textContent = 'Pista usada: -1 intento.';
+          messageEl.className = 'message';
+        }
+      });
+
+      restartBtn.addEventListener('click', startLevel);
+
+      nextBtn.addEventListener('click', () => {
+        if (levelIndex < MAX_LEVELS - 1) {
+          levelIndex += 1;
+          startLevel();
+        }
+      });
+
+      startLevel();
     </script>
   </body>
 </html>
