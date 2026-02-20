@@ -767,6 +767,7 @@
         timerStarted = false;
         hintStep = 0;
         hintSteps = buildHintSteps(currentHint);
+        hintBtn.textContent = t('hintBtn', { cost: HINT_COSTS[0] });
 
         messageEl.textContent = '';
         messageEl.className = 'message';
