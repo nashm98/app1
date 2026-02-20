@@ -15,8 +15,9 @@ Juego web tipo ahorcado con **20 niveles**, tiempo limitado y progreso por punto
 ## Reglas clave
 
 - Para pasar de nivel debes **acumular puntos** (varias palabras correctas), no solo acertar una.
-- La longitud de palabra aumenta con el nivel: niveles iniciales usan palabras más cortas y niveles altos palabras más largas/complejas.
+- La complejidad de palabra aumenta con el nivel, pero con longitudes variadas dentro de cada nivel para mayor aleatoriedad.
 - Cada palabra acertada suma 1 punto al progreso del nivel.
+- Si aciertas una palabra sin usar pistas, recibes 1 punto extra de bonificación.
 - El tiempo comienza en la **primera acción** (probar intento o pulsar algún botón).
 - Letra correcta: revela posiciones y suma tiempo extra.
 - Letra incorrecta: descuenta 1 intento.
