@@ -42,6 +42,35 @@
         text-align: center;
       }
 
+
+      .header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .header-row h1 {
+        margin: 0;
+      }
+
+      .lang-switch {
+        display: flex;
+        gap: 6px;
+      }
+
+      .lang-btn {
+        padding: 6px 8px;
+        font-size: 1rem;
+        border-radius: 8px;
+        background: #0f172a;
+        border: 1px solid #35507e;
+      }
+
+      .lang-btn.active {
+        outline: 2px solid var(--accent);
+      }
+
       .status {
         display: grid;
         grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -192,23 +221,60 @@
       .modal-card p { margin: 0 0 16px; color: var(--muted); }
 
       @media (max-width: 760px) {
+        .header-row {
+          flex-direction: column;
+          align-items: center;
+        }
+
         .status { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        #guess-input { width: 100%; }
+      }
+
+      .header-row h1 {
+        margin: 0;
+      }
+
+      .lang-switch {
+        display: flex;
+        gap: 6px;
+      }
+
+      .lang-btn {
+        padding: 6px 8px;
+        font-size: 1rem;
+        border-radius: 8px;
+        background: #0f172a;
+        border: 1px solid #35507e;
+      }
+
+      .lang-btn.active {
+        outline: 2px solid var(--accent);
+      }
+
+      .status { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         #guess-input { width: 100%; }
       }
     </style>
   </head>
   <body>
     <main class="game">
-      <h1>Memora ⏳</h1>
+      <div class="header-row">
+        <h1 id="app-title">Memora ⏳</h1>
+        <div class="lang-switch" aria-label="Idioma">
+          <button type="button" class="lang-btn" data-lang="es" title="Español">🇪🇸</button>
+          <button type="button" class="lang-btn" data-lang="en" title="English">🇬🇧</button>
+          <button type="button" class="lang-btn" data-lang="pt" title="Português">🇵🇹</button>
+        </div>
+      </div>
       <p class="meta" id="meta"></p>
 
       <section class="status">
-        <div class="card">Nivel<strong id="level">1/20</strong></div>
-        <div class="card">Puntos<strong id="points">0/3</strong></div>
-        <div class="card">Tiempo<strong id="time">45</strong></div>
-        <div class="card">Intentos<strong id="attempts">7</strong></div>
-        <div class="card">Errores<strong id="errors">0</strong></div>
-        <div class="card">+Tiempo letra<strong id="bonus">+4s</strong></div>
+        <div class="card"><span id="label-level">Nivel</span><strong id="level">1/20</strong></div>
+        <div class="card"><span id="label-points">Puntos</span><strong id="points">0/3</strong></div>
+        <div class="card"><span id="label-time">Tiempo</span><strong id="time">45</strong></div>
+        <div class="card"><span id="label-attempts">Intentos</span><strong id="attempts">7</strong></div>
+        <div class="card"><span id="label-errors">Errores</span><strong id="errors">0</strong></div>
+        <div class="card"><span id="label-bonus">+Tiempo letra</span><strong id="bonus">+4s</strong></div>
       </section>
 
       <section class="word" id="word" aria-label="Palabra a adivinar"></section>
@@ -223,7 +289,7 @@
         <button class="restart-btn" id="restart-btn" type="button">Reiniciar nivel</button>
       </div>
 
-      <p class="history">Letras usadas: <span id="used">(ninguna)</span></p>
+      <p class="history"><span id="used-label">Letras usadas:</span> <span id="used">(ninguna)</span></p>
       <p class="hint" id="hint">Pista: (oculta)</p>
       <p class="message" id="message"></p>
     </main>
@@ -260,13 +326,35 @@
         { theme: 'educación', bonus: 2, targetPoints: 3, words: [{ word: 'INTERDISCIPLINARIO', hint: 'Integra varias áreas de conocimiento.' }, { word: 'PEDAGOGIA', hint: 'Disciplina sobre enseñanza.' }, { word: 'CURRICULO', hint: 'Plan de estudios estructurado.' }] },
       ];
 
+      const I18N = {
+        es: { level: 'Nivel', points: 'Puntos', time: 'Tiempo', attempts: 'Intentos', errors: 'Errores', bonus: '+Tiempo letra', used: 'Letras usadas:', none: '(ninguna)', hintBtn: 'PISTA (-1)', restart: 'Reiniciar nivel',
+          enterLetter: 'Para letra, ingresa exactamente 1 carácter.', usedLetter: 'Esa letra ya fue usada.', correctLetter: '¡Correcta! Ganaste +{bonus}s.', wrongLetter: 'Letra incorrecta: -1 intento.',
+          invalidWord: 'Ingresa una palabra válida (solo letras).', wrongWord: 'Palabra incorrecta: -1 intento.', invalidInput: 'Ingresa una letra o palabra válida.', hintUsed: 'Pista usada: -1 intento.', hintAlready: 'Ya usaste la pista en esta palabra.',
+          result: 'Resultado disponible en la ventana emergente.', tryAgain: 'Inténtalo de nuevo', restartModal: 'Comenzar de nuevo', done: 'Juego completado', back1: 'Volver al nivel 1', levelDone: 'Nivel superado', nextLevel: 'Siguiente nivel', wordDone: 'Palabra acertada', nextWord: 'Siguiente palabra', noAttempts: 'Sin intentos', timeOver: 'Se acabó el tiempo', loading: 'Cargando...', theme: 'Tema', difficulty: 'Dificultad', hidden: '(oculta)' },
+        en: { level: 'Level', points: 'Points', time: 'Time', attempts: 'Attempts', errors: 'Errors', bonus: '+Time/letter', used: 'Used letters:', none: '(none)', hintBtn: 'HINT (-1)', restart: 'Restart level',
+          enterLetter: 'For a letter, enter exactly 1 character.', usedLetter: 'That letter was already used.', correctLetter: 'Correct! You gained +{bonus}s.', wrongLetter: 'Wrong letter: -1 attempt.',
+          invalidWord: 'Enter a valid word (letters only).', wrongWord: 'Wrong word: -1 attempt.', invalidInput: 'Enter a valid letter or word.', hintUsed: 'Hint used: -1 attempt.', hintAlready: 'Hint already used for this word.',
+          result: 'Result available in popup.', tryAgain: 'Try again', restartModal: 'Start again', done: 'Game completed', back1: 'Back to level 1', levelDone: 'Level completed', nextLevel: 'Next level', wordDone: 'Word solved', nextWord: 'Next word', noAttempts: 'No attempts left', timeOver: 'Time is over', loading: 'Loading...', theme: 'Theme', difficulty: 'Difficulty', hidden: '(hidden)' },
+        pt: { level: 'Nível', points: 'Pontos', time: 'Tempo', attempts: 'Tentativas', errors: 'Erros', bonus: '+Tempo/letra', used: 'Letras usadas:', none: '(nenhuma)', hintBtn: 'DICA (-1)', restart: 'Reiniciar nível',
+          enterLetter: 'Para letra, digite exatamente 1 caractere.', usedLetter: 'Essa letra já foi usada.', correctLetter: 'Correta! Você ganhou +{bonus}s.', wrongLetter: 'Letra incorreta: -1 tentativa.',
+          invalidWord: 'Digite uma palavra válida (somente letras).', wrongWord: 'Palavra incorreta: -1 tentativa.', invalidInput: 'Digite uma letra ou palavra válida.', hintUsed: 'Dica usada: -1 tentativa.', hintAlready: 'Você já usou a dica nesta palavra.',
+          result: 'Resultado disponível no popup.', tryAgain: 'Tente novamente', restartModal: 'Começar de novo', done: 'Jogo concluído', back1: 'Voltar ao nível 1', levelDone: 'Nível superado', nextLevel: 'Próximo nível', wordDone: 'Palavra acertada', nextWord: 'Próxima palavra', noAttempts: 'Sem tentativas', timeOver: 'O tempo acabou', loading: 'Carregando...', theme: 'Tema', difficulty: 'Dificuldade', hidden: '(oculta)' },
+      };
+
       const ONLINE_MODE = true;
-      const RANDOM_WORD_ENDPOINTS = [
-        'https://random-word-api.herokuapp.com/word?number=1',
-        'https://random-word-api.vercel.app/api?words=1',
-      ];
+      const RANDOM_WORD_ENDPOINTS = ['https://random-word-api.herokuapp.com/word?number=1', 'https://random-word-api.vercel.app/api?words=1'];
       const MAX_LEVELS = LEVELS.length;
       const POINTS_PER_WORD = 1;
+
+      const appTitleEl = document.getElementById('app-title');
+      const labelLevelEl = document.getElementById('label-level');
+      const labelPointsEl = document.getElementById('label-points');
+      const labelTimeEl = document.getElementById('label-time');
+      const labelAttemptsEl = document.getElementById('label-attempts');
+      const labelErrorsEl = document.getElementById('label-errors');
+      const labelBonusEl = document.getElementById('label-bonus');
+      const usedLabelEl = document.getElementById('used-label');
+      const langButtons = document.querySelectorAll('.lang-btn');
 
       const wordEl = document.getElementById('word');
       const timeEl = document.getElementById('time');
@@ -279,21 +367,18 @@
       const pointsEl = document.getElementById('points');
       const metaEl = document.getElementById('meta');
       const bonusEl = document.getElementById('bonus');
-
       const guessForm = document.getElementById('guess-form');
       const guessInput = document.getElementById('guess-input');
       const hintBtn = document.getElementById('hint-btn');
       const restartBtn = document.getElementById('restart-btn');
-
       const modalEl = document.getElementById('result-modal');
       const modalTitleEl = document.getElementById('modal-title');
       const modalTextEl = document.getElementById('modal-text');
       const modalActionBtn = document.getElementById('modal-action');
 
+      let currentLang = 'es';
       let levelIndex = 0;
       let levelPoints = 0;
-      let usedWordIndexes = [];
-
       let secretWord = '';
       let currentHint = '';
       let guessedLetters = new Set();
@@ -308,43 +393,48 @@
       const usedWordsCache = new Set();
       const definitionCache = new Map();
 
-      function currentLevel() {
-        return LEVELS[levelIndex];
+      const t = (key, vars = {}) => {
+        let text = (I18N[currentLang] && I18N[currentLang][key]) || I18N.es[key] || key;
+        Object.entries(vars).forEach(([k, v]) => {
+          text = text.replaceAll(`{${k}}`, String(v));
+        });
+        return text;
+      };
+
+      function applyLanguage() {
+        document.documentElement.lang = currentLang;
+        labelLevelEl.textContent = t('level');
+        labelPointsEl.textContent = t('points');
+        labelTimeEl.textContent = t('time');
+        labelAttemptsEl.textContent = t('attempts');
+        labelErrorsEl.textContent = t('errors');
+        labelBonusEl.textContent = t('bonus');
+        usedLabelEl.textContent = t('used');
+        hintBtn.textContent = t('hintBtn');
+        restartBtn.textContent = t('restart');
+        appTitleEl.textContent = 'Memora ⏳';
+        if (['(ninguna)', '(none)', '(nenhuma)'].includes(usedEl.textContent.trim())) {
+          usedEl.textContent = t('none');
+        }
       }
 
-      function levelAttempts(index) {
-        if (index < 6) return 8;
-        if (index < 12) return 7;
-        if (index < 17) return 6;
-        return 5;
-      }
-
-      function levelTime(index) {
-        if (index < 6) return 55;
-        if (index < 12) return 50;
-        if (index < 17) return 45;
-        return 40;
-      }
+      function currentLevel() { return LEVELS[levelIndex]; }
+      function levelAttempts(index) { if (index < 6) return 8; if (index < 12) return 7; if (index < 17) return 6; return 5; }
+      function levelTime(index) { if (index < 6) return 55; if (index < 12) return 50; if (index < 17) return 45; return 40; }
 
       function normalizeText(value) {
-        return value
-          .normalize('NFD')
-          .replace(/[̀-ͯ]/g, '')
-          .toUpperCase()
-          .trim();
+        return value.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().trim();
       }
 
-      function sanitizeWord(rawWord) {
-        return normalizeText(rawWord).replace(/[^A-ZÑ]/g, '');
-      }
+      function sanitizeWord(rawWord) { return normalizeText(rawWord).replace(/[^A-ZÑ]/g, ''); }
 
       async function fetchJsonWithTimeout(url, timeoutMs = 2500) {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeoutMs);
         try {
-          const response = await fetch(url, { signal: controller.signal });
-          if (!response.ok) return null;
-          return await response.json();
+          const res = await fetch(url, { signal: controller.signal });
+          if (!res.ok) return null;
+          return await res.json();
         } catch {
           return null;
         } finally {
@@ -352,21 +442,25 @@
         }
       }
 
+      async function translateToSpanish(text) {
+        const data = await fetchJsonWithTimeout(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=es&dt=t&q=${encodeURIComponent(text)}`, 3000);
+        if (Array.isArray(data) && Array.isArray(data[0])) {
+          const translated = data[0].map((part) => part[0]).join('');
+          if (translated) return translated;
+        }
+        return `Descripción en español no disponible para "${text}".`;
+      }
+
       async function fetchOnlineDefinition(word) {
         const lower = word.toLowerCase();
-        if (definitionCache.has(lower)) {
-          return definitionCache.get(lower);
-        }
+        if (definitionCache.has(lower)) return definitionCache.get(lower);
 
         const data = await fetchJsonWithTimeout(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(lower)}`);
-        let definition = `Palabra obtenida online para el nivel de ${currentLevel().theme}.`;
+        let definition = `Palabra relacionada con ${currentLevel().theme}.`;
 
         if (Array.isArray(data) && data[0]?.meanings?.length) {
-          const firstMeaning = data[0].meanings[0];
-          const firstDef = firstMeaning?.definitions?.[0]?.definition;
-          if (firstDef) {
-            definition = `Definición online: ${firstDef}`;
-          }
+          const firstDef = data[0].meanings[0]?.definitions?.[0]?.definition;
+          if (firstDef) definition = await translateToSpanish(firstDef);
         }
 
         definitionCache.set(lower, definition);
@@ -374,42 +468,24 @@
       }
 
       async function fetchOnlineWordEntry() {
-        for (let attempt = 0; attempt < 8; attempt += 1) {
-          const endpoint = RANDOM_WORD_ENDPOINTS[attempt % RANDOM_WORD_ENDPOINTS.length];
+        for (let i = 0; i < 8; i += 1) {
+          const endpoint = RANDOM_WORD_ENDPOINTS[i % RANDOM_WORD_ENDPOINTS.length];
           const data = await fetchJsonWithTimeout(endpoint);
           const candidate = Array.isArray(data) ? sanitizeWord(data[0] || '') : '';
-
           if (!candidate || candidate.length < 4) continue;
           if (usedWordsCache.has(candidate)) continue;
-
           const hint = await fetchOnlineDefinition(candidate);
-          return { word: candidate, hint, source: 'online' };
+          return { word: candidate, hint };
         }
-
         return null;
       }
 
       function pickOfflineWordEntry() {
         const words = currentLevel().words;
-
-        let availableIndexes = words
-          .map((entry, index) => ({ index, normalized: sanitizeWord(entry.word) }))
-          .filter(({ normalized }) => normalized && !usedWordsCache.has(normalized))
-          .map(({ index }) => index);
-
-        if (availableIndexes.length === 0) {
-          availableIndexes = words.map((_, index) => index);
-        }
-
-        const selected = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
-        usedWordIndexes.push(selected);
-        const entry = words[selected];
-
-        return {
-          word: sanitizeWord(entry.word),
-          hint: entry.hint,
-          source: 'offline',
-        };
+        let candidates = words.filter((entry) => !usedWordsCache.has(sanitizeWord(entry.word)));
+        if (!candidates.length) candidates = words;
+        const entry = candidates[Math.floor(Math.random() * candidates.length)];
+        return { word: sanitizeWord(entry.word), hint: entry.hint };
       }
 
       async function pickWordEntry() {
@@ -422,47 +498,38 @@
 
       function renderWord() {
         wordEl.innerHTML = '';
-        for (const letter of secretWord) {
-          const div = document.createElement('div');
-          div.className = 'letter';
-          div.textContent = guessedLetters.has(letter) ? letter : '';
-          wordEl.appendChild(div);
-        }
+        [...secretWord].forEach((letter) => {
+          const el = document.createElement('div');
+          el.className = 'letter';
+          el.textContent = guessedLetters.has(letter) ? letter : '';
+          wordEl.appendChild(el);
+        });
       }
 
       function updateStatus() {
-        const level = currentLevel();
         levelEl.textContent = `${levelIndex + 1}/${MAX_LEVELS}`;
-        pointsEl.textContent = `${levelPoints}/${level.targetPoints}`;
+        pointsEl.textContent = `${levelPoints}/${currentLevel().targetPoints}`;
         timeEl.textContent = String(timeLeft);
         attemptsEl.textContent = String(attemptsLeft);
         errorsEl.textContent = String(wrongLetters.size);
-        usedEl.textContent = wrongLetters.size ? [...wrongLetters].join(', ') : '(ninguna)';
-        bonusEl.textContent = `+${level.bonus}s`;
-        metaEl.textContent = `Tema: ${level.theme} · Dificultad ${levelIndex + 1}`;
+        usedEl.textContent = wrongLetters.size ? [...wrongLetters].join(', ') : t('none');
+        bonusEl.textContent = `+${currentLevel().bonus}s`;
+        metaEl.textContent = `${t('theme')}: ${currentLevel().theme} · ${t('difficulty')} ${levelIndex + 1}`;
       }
 
-      function allLettersGuessed() {
-        return [...secretWord].every((letter) => guessedLetters.has(letter));
-      }
-
-      function revealWord() {
-        for (const letter of secretWord) guessedLetters.add(letter);
-        renderWord();
-      }
+      function allLettersGuessed() { return [...secretWord].every((l) => guessedLetters.has(l)); }
+      function revealWord() { [...secretWord].forEach((l) => guessedLetters.add(l)); renderWord(); }
 
       function openResultModal({ win, title, actionText, onAction, reason = '' }) {
-        const definitionText = `Definición: ${currentHint}`;
         modalEl.classList.remove('hidden');
         modalTitleEl.textContent = title;
-        modalTextEl.textContent = `${definitionText}${reason ? ` · ${reason}` : ''}`;
+        modalTextEl.textContent = `Pista: ${currentHint}${reason ? ` · ${reason}` : ''}`;
         modalActionBtn.textContent = actionText;
         modalActionBtn.onclick = () => {
           modalEl.classList.add('hidden');
           onAction();
         };
-
-        messageEl.textContent = 'Resultado disponible en la ventana emergente.';
+        messageEl.textContent = t('result');
         messageEl.className = win ? 'message win' : 'message lose';
       }
 
@@ -470,13 +537,7 @@
         gameOver = true;
         clearInterval(timerId);
         revealWord();
-        openResultModal({
-          win: false,
-          title: 'Inténtalo de nuevo',
-          reason,
-          actionText: 'Comenzar de nuevo',
-          onAction: () => startLevel(),
-        });
+        openResultModal({ win: false, title: t('tryAgain'), actionText: t('restartModal'), reason, onAction: () => startLevel() });
       }
 
       function finishWordSolved() {
@@ -487,36 +548,14 @@
 
         if (levelPoints >= currentLevel().targetPoints) {
           if (levelIndex === MAX_LEVELS - 1) {
-            openResultModal({
-              win: true,
-              title: 'Juego completado',
-              actionText: 'Volver al nivel 1',
-              onAction: () => {
-                levelIndex = 0;
-                startLevel();
-              },
-            });
+            openResultModal({ win: true, title: t('done'), actionText: t('back1'), onAction: () => { levelIndex = 0; startLevel(); } });
             return;
           }
-
-          openResultModal({
-            win: true,
-            title: 'Nivel superado',
-            actionText: 'Siguiente nivel',
-            onAction: () => {
-              levelIndex += 1;
-              startLevel();
-            },
-          });
+          openResultModal({ win: true, title: t('levelDone'), actionText: t('nextLevel'), onAction: () => { levelIndex += 1; startLevel(); } });
           return;
         }
 
-        openResultModal({
-          win: true,
-          title: 'Palabra acertada',
-          actionText: 'Siguiente palabra',
-          onAction: () => startRound(),
-        });
+        openResultModal({ win: true, title: t('wordDone'), actionText: t('nextWord'), onAction: () => startRound() });
       }
 
       function consumeAttemptAndCheckLose(reason) {
@@ -536,10 +575,9 @@
             clearInterval(timerId);
             return;
           }
-
           timeLeft -= 1;
           updateStatus();
-          if (timeLeft <= 0) finishLoss('Se acabó el tiempo');
+          if (timeLeft <= 0) finishLoss(t('timeOver'));
         }, 1000);
       }
 
@@ -551,11 +589,9 @@
       }
 
       async function startRound() {
-        const level = currentLevel();
-
         gameOver = true;
-        hintEl.textContent = 'Pista: (oculta)';
-        messageEl.textContent = 'Cargando palabra aleatoria...';
+        hintEl.textContent = `Pista: ${t('hidden')}`;
+        messageEl.textContent = t('loading');
         messageEl.className = 'message';
         modalEl.classList.add('hidden');
 
@@ -574,7 +610,6 @@
 
         messageEl.textContent = '';
         messageEl.className = 'message';
-
         renderWord();
         updateStatus();
         guessInput.value = '';
@@ -583,7 +618,6 @@
 
       function startLevel() {
         levelPoints = 0;
-        usedWordIndexes = [];
         startRound();
       }
 
@@ -592,13 +626,13 @@
         const guess = normalizeText(rawValue);
 
         if (!/^[A-ZÑ]$/.test(guess)) {
-          messageEl.textContent = 'Para letra, ingresa exactamente 1 carácter.';
+          messageEl.textContent = t('enterLetter');
           messageEl.className = 'message lose';
           return;
         }
 
         if (guessedLetters.has(guess) || wrongLetters.has(guess)) {
-          messageEl.textContent = 'Esa letra ya fue usada.';
+          messageEl.textContent = t('usedLetter');
           messageEl.className = 'message';
           return;
         }
@@ -608,11 +642,10 @@
           timeLeft += currentLevel().bonus;
           renderWord();
           updateStatus();
-
           if (allLettersGuessed()) {
             finishWordSolved();
           } else {
-            messageEl.textContent = `¡Correcta! Ganaste +${currentLevel().bonus}s.`;
+            messageEl.textContent = t('correctLetter', { bonus: currentLevel().bonus });
             messageEl.className = 'message win';
           }
           return;
@@ -620,9 +653,9 @@
 
         wrongLetters.add(guess);
         updateStatus();
-        const isLost = consumeAttemptAndCheckLose('Sin intentos');
-        if (!isLost) {
-          messageEl.textContent = 'Letra incorrecta: -1 intento.';
+        const lost = consumeAttemptAndCheckLose(t('noAttempts'));
+        if (!lost) {
+          messageEl.textContent = t('wrongLetter');
           messageEl.className = 'message lose';
         }
       }
@@ -632,7 +665,7 @@
         const guessWord = normalizeText(rawValue);
 
         if (!guessWord || !/^[A-ZÑ]+$/.test(guessWord)) {
-          messageEl.textContent = 'Ingresa una palabra válida (solo letras).';
+          messageEl.textContent = t('invalidWord');
           messageEl.className = 'message lose';
           return;
         }
@@ -644,9 +677,9 @@
           return;
         }
 
-        const isLost = consumeAttemptAndCheckLose('Sin intentos');
-        if (!isLost) {
-          messageEl.textContent = 'Palabra incorrecta: -1 intento.';
+        const lost = consumeAttemptAndCheckLose(t('noAttempts'));
+        if (!lost) {
+          messageEl.textContent = t('wrongWord');
           messageEl.className = 'message lose';
         }
       }
@@ -661,25 +694,21 @@
 
         const normalized = normalizeText(value);
         if (!normalized) {
-          messageEl.textContent = 'Ingresa una letra o palabra válida.';
+          messageEl.textContent = t('invalidInput');
           messageEl.className = 'message lose';
           return;
         }
 
-        if (normalized.length === 1) {
-          handleLetterGuess(normalized);
-        } else {
-          handleWordGuess(normalized);
-        }
+        if (normalized.length === 1) handleLetterGuess(normalized);
+        else handleWordGuess(normalized);
       });
 
       hintBtn.addEventListener('click', () => {
         if (gameOver) return;
-
         ensureTimerStarted();
 
         if (hintUsed) {
-          messageEl.textContent = 'Ya usaste la pista en esta palabra.';
+          messageEl.textContent = t('hintAlready');
           messageEl.className = 'message';
           return;
         }
@@ -687,9 +716,9 @@
         hintUsed = true;
         hintEl.textContent = `Pista: ${currentHint}`;
 
-        const isLost = consumeAttemptAndCheckLose('Te quedaste sin intentos por usar pista');
-        if (!isLost) {
-          messageEl.textContent = 'Pista usada: -1 intento.';
+        const lost = consumeAttemptAndCheckLose(t('noAttempts'));
+        if (!lost) {
+          messageEl.textContent = t('hintUsed');
           messageEl.className = 'message';
         }
       });
@@ -699,8 +728,17 @@
         ensureTimerStarted();
       });
 
-      startLevel();
+      langButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          currentLang = btn.dataset.lang || 'es';
+          applyLanguage();
+          updateStatus();
+          if (hintUsed) hintEl.textContent = `Pista: ${currentHint}`;
+        });
+      });
 
+      applyLanguage();
+      startLevel();
     </script>
   </body>
 </html>

@@ -8,6 +8,7 @@ Juego web tipo ahorcado con **20 niveles**, tiempo limitado y progreso por punto
 2. En cada nivel hay **un único campo de ingreso** y un botón (`▶`):
    - Si escribes 1 carácter, se toma como intento de letra.
    - Si escribes más de 1 carácter, se toma como intento de palabra completa.
+3. Usa el selector de idioma con banderas (**🇪🇸 🇬🇧 🇵🇹**) para cambiar la interfaz.
 
 ## Reglas clave
 
@@ -24,9 +25,10 @@ Juego web tipo ahorcado con **20 niveles**, tiempo limitado y progreso por punto
 - **Modo online**: intenta obtener palabras aleatorias desde APIs públicas.
 - **Cache anti-repetición**: guarda palabras ya usadas en la sesión para evitar repetirlas.
 - **Fallback offline**: si falla la conexión o la API, usa automáticamente el pool local del nivel.
+- Las pistas de palabras online se muestran siempre como **`Pista: ...`** en español.
 
 ## Popup de resultado
 
-- Al acertar una palabra: aparece popup con definición y opción para continuar.
+- Al acertar una palabra: aparece popup con pista y opción para continuar.
 - Al completar los puntos del nivel: aparece popup de **Nivel superado** para avanzar.
 - Al perder: aparece popup para **Comenzar de nuevo**.
