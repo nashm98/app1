@@ -54,6 +54,13 @@
         margin: 0;
       }
 
+      #app-logo {
+        height: 68px;
+        width: auto;
+        filter: drop-shadow(0 2px 10px rgb(0 0 0 / 0.35));
+      }
+
+
       .lang-switch {
         display: flex;
         gap: 6px;
@@ -140,7 +147,7 @@
       }
 
       #guess-input {
-        width: min(380px, 100%);
+        width: min(260px, 70vw);
       }
 
       button {
@@ -219,7 +226,6 @@
 
       .modal-card h2 { margin: 0 0 10px; }
       .modal-card p { margin: 0 0 16px; color: var(--muted); }
-
       @media (max-width: 760px) {
         .header-row {
           flex-direction: column;
@@ -227,39 +233,14 @@
         }
 
         .status { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        #guess-input { width: 100%; }
-      }
-
-      .header-row h1 {
-        margin: 0;
-      }
-
-      .lang-switch {
-        display: flex;
-        gap: 6px;
-      }
-
-      .lang-btn {
-        padding: 6px 8px;
-        font-size: 1rem;
-        border-radius: 8px;
-        background: #0f172a;
-        border: 1px solid #35507e;
-      }
-
-      .lang-btn.active {
-        outline: 2px solid var(--accent);
-      }
-
-      .status { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        #guess-input { width: 100%; }
+        #guess-input { width: min(260px, 85vw); }
       }
     </style>
   </head>
   <body>
     <main class="game">
       <div class="header-row">
-        <h1 id="app-title">Memora ⏳</h1>
+        <img id="app-logo" alt="Memora" />
         <div class="lang-switch" aria-label="Idioma">
           <button type="button" class="lang-btn" data-lang="es" title="Español">🇪🇸</button>
           <button type="button" class="lang-btn" data-lang="en" title="English">🇬🇧</button>
@@ -346,8 +327,7 @@
       const MAX_LEVELS = LEVELS.length;
       const POINTS_PER_WORD = 1;
 
-      const appTitleEl = document.getElementById('app-title');
-      const labelLevelEl = document.getElementById('label-level');
+            const labelLevelEl = document.getElementById('label-level');
       const labelPointsEl = document.getElementById('label-points');
       const labelTimeEl = document.getElementById('label-time');
       const labelAttemptsEl = document.getElementById('label-attempts');
@@ -375,6 +355,23 @@
       const modalTitleEl = document.getElementById('modal-title');
       const modalTextEl = document.getElementById('modal-text');
       const modalActionBtn = document.getElementById('modal-action');
+
+      const logoSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='560' height='120' viewBox='0 0 560 120'>
+        <rect width='560' height='120' fill='none'/>
+        <g fill='none' stroke='#0b0b0b' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'>
+          <path d='M24 102h130'/>
+          <path d='M54 102v-60h62'/>
+          <path d='M85 42l-31 31'/>
+          <circle cx='122' cy='25' r='18'/>
+          <path d='M122 43v14'/>
+          <circle cx='122' cy='66' r='8'/>
+          <path d='M122 74v20'/>
+          <path d='M110 94c0-8 6-14 12-14s12 6 12 14'/>
+        </g>
+        <text x='176' y='84' font-size='78' font-family='Arial, Helvetica, sans-serif' font-weight='700' fill='#0b0b0b'>Memora</text>
+      </svg>`;
+      const appLogoEl = document.getElementById('app-logo');
+      appLogoEl.src = `data:image/svg+xml;utf8,${encodeURIComponent(logoSvg)}`;
 
       let currentLang = 'es';
       let levelIndex = 0;
@@ -412,8 +409,7 @@
         usedLabelEl.textContent = t('used');
         hintBtn.textContent = t('hintBtn');
         restartBtn.textContent = t('restart');
-        appTitleEl.textContent = 'Memora ⏳';
-        if (['(ninguna)', '(none)', '(nenhuma)'].includes(usedEl.textContent.trim())) {
+                if (['(ninguna)', '(none)', '(nenhuma)'].includes(usedEl.textContent.trim())) {
           usedEl.textContent = t('none');
         }
       }
