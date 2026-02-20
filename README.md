@@ -20,7 +20,8 @@ Juego web tipo ahorcado con **20 niveles**, tiempo limitado y progreso por punto
 - Letra correcta: revela posiciones y suma tiempo extra.
 - Letra incorrecta: descuenta 1 intento.
 - Palabra incorrecta: descuenta 1 intento.
-- Botón de pista: muestra `Pista:` / `Hint:` / `Dica:` y descuenta 1 intento.
+- Botón de pista: permite hasta 3 pistas por palabra y resta puntos acumulados: 1ª `-1`, 2ª `-3`, 3ª `-5`.
+- Para pedir la 2ª y 3ª pista, primero debes acertar al menos una letra.
 
 ## Generación de palabras
 
