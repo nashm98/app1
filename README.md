@@ -9,8 +9,9 @@ Juego web tipo ahorcado con **20 niveles**, tiempo limitado y progreso por punto
    - Si escribes 1 carácter, se toma como intento de letra.
    - Si escribes más de 1 carácter, se toma como intento de palabra completa.
 3. Usa el selector de idioma con bandera + texto (**🇪🇸 Español, 🇬🇧 English, 🇵🇹 Português**).
-4. Usa el botón ☀️/🌙 para alternar entre modo día y modo nocturno.
+4. Usa el selector deslizante tipo perilla para alternar entre modo día y modo nocturno.
 5. Los popups de resultado también respetan el tema seleccionado (claro/oscuro).
+6. El fondo incluye tramas sutiles variables para dar dinamismo sin afectar legibilidad.
 
 ## Reglas clave
 
@@ -20,7 +21,7 @@ Juego web tipo ahorcado con **20 niveles**, tiempo limitado y progreso por punto
 - Si aciertas una palabra sin usar pistas, recibes 1 punto extra de bonificación.
 - El tiempo comienza en la **primera acción** (probar intento o pulsar algún botón).
 - Letra correcta: revela posiciones y suma tiempo extra.
-- Letra incorrecta: descuenta 1 intento.
+- Letra incorrecta: descuenta 1 intento y activa una animación breve de vibración/destello rojo.
 - Palabra incorrecta: descuenta 1 intento.
 - Botón de pista: permite hasta 3 pistas por palabra y resta puntos acumulados: 1ª `-1`, 2ª `-3`, 3ª `-5`.
 - No se permiten puntos negativos: si no alcanzan los puntos para una pista, se bloquea con mensaje de puntos insuficientes.
