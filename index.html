@@ -16,6 +16,12 @@
         --bad: #fb7185;
         --muted: #9fb2d1;
         --logo: #f8fbff;
+        --btn-guess: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%);
+        --btn-guess-text: #04131d;
+        --btn-hint: linear-gradient(135deg, #f59e0b 0%, #fb7185 100%);
+        --btn-hint-text: #1a0e00;
+        --btn-restart: linear-gradient(135deg, #334155 0%, #1f2937 100%);
+        --btn-restart-text: #f8fbff;
       }
 
       :root[data-theme='light'] {
@@ -29,6 +35,12 @@
         --bad: #dc2626;
         --muted: #475467;
         --logo: #111827;
+        --btn-guess: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+        --btn-guess-text: #ffffff;
+        --btn-hint: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+        --btn-hint-text: #111827;
+        --btn-restart: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        --btn-restart-text: #ffffff;
       }
 
       body {
@@ -199,18 +211,18 @@
       }
 
       .guess-btn {
-        background: linear-gradient(135deg, var(--accent) 0%, #06b6d4 100%);
-        color: #04131d;
+        background: var(--btn-guess);
+        color: var(--btn-guess-text);
       }
 
       .restart-btn {
-        background: linear-gradient(135deg, #334155 0%, #1f2937 100%);
-        color: var(--text);
+        background: var(--btn-restart);
+        color: var(--btn-restart-text);
       }
 
       .hint-btn {
-        background: linear-gradient(135deg, #f59e0b 0%, #fb7185 100%);
-        color: #1a0e00;
+        background: var(--btn-hint);
+        color: var(--btn-hint-text);
       }
 
       .history,
@@ -321,26 +333,34 @@
 
     <script>
       const LEVELS = [
-        { theme: 'vida diaria', bonus: 4, targetPoints: 3, words: [{ word: 'CASA', hint: 'Lugar donde vives.' }, { word: 'LLAVE', hint: 'Sirve para abrir puertas.' }, { word: 'MESA', hint: 'Mueble para comer o trabajar.' }] },
+        { theme: 'vida diaria', bonus: 4, targetPoints: 3, words: [{ word: 'SOL', hint: 'Estrella que ilumina el día.' }, { word: 'PAN', hint: 'Alimento hecho con harina.' }, { word: 'RIO', hint: 'Corriente natural de agua.' }] },
+        { theme: 'hogar', bonus: 4, targetPoints: 3, words: [{ word: 'CASA', hint: 'Lugar donde vives.' }, { word: 'MESA', hint: 'Mueble para comer o trabajar.' }, { word: 'SILLA', hint: 'Asiento con respaldo.' }] },
+        { theme: 'objetos', bonus: 4, targetPoints: 3, words: [{ word: 'LLAVE', hint: 'Sirve para abrir puertas.' }, { word: 'RELOJ', hint: 'Indica la hora.' }, { word: 'LAPIZ', hint: 'Se usa para escribir o dibujar.' }] },
+        { theme: 'ciudad', bonus: 4, targetPoints: 3, words: [{ word: 'CALLE', hint: 'Vía dentro de la ciudad.' }, { word: 'PLAZA', hint: 'Espacio público de reunión.' }, { word: 'PARQUE', hint: 'Espacio verde urbano.' }] },
         { theme: 'animales', bonus: 4, targetPoints: 3, words: [{ word: 'PERRO', hint: 'Animal doméstico leal.' }, { word: 'GATO', hint: 'Felino doméstico.' }, { word: 'CONEJO', hint: 'Animal de orejas largas.' }] },
-        { theme: 'ciudad', bonus: 4, targetPoints: 3, words: [{ word: 'PARQUE', hint: 'Espacio verde urbano.' }, { word: 'PLAZA', hint: 'Espacio público de reunión.' }, { word: 'CALLE', hint: 'Vía dentro de la ciudad.' }] },
-        { theme: 'hogar', bonus: 4, targetPoints: 3, words: [{ word: 'VENTANA', hint: 'Abertura que deja entrar luz.' }, { word: 'COCINA', hint: 'Lugar donde preparas comida.' }, { word: 'SILLA', hint: 'Asiento con respaldo.' }] },
-        { theme: 'objetos', bonus: 4, targetPoints: 3, words: [{ word: 'RELOJ', hint: 'Indica la hora.' }, { word: 'MOCHILA', hint: 'Sirve para cargar cosas.' }, { word: 'CUADERNO', hint: 'Se usa para escribir notas.' }] },
-        { theme: 'movilidad', bonus: 4, targetPoints: 3, words: [{ word: 'BICICLETA', hint: 'Vehículo de dos ruedas.' }, { word: 'AUTOBUS', hint: 'Transporte público colectivo.' }, { word: 'METRO', hint: 'Tren urbano subterráneo.' }] },
-        { theme: 'tiempo', bonus: 3, targetPoints: 3, words: [{ word: 'CALENDARIO', hint: 'Organiza días y meses.' }, { word: 'SEMANA', hint: 'Período de siete días.' }, { word: 'ESTACION', hint: 'División climática del año.' }] },
-        { theme: 'naturaleza', bonus: 3, targetPoints: 3, words: [{ word: 'MURCIELAGO', hint: 'Mamífero que vuela de noche.' }, { word: 'BOSQUE', hint: 'Terreno poblado de árboles.' }, { word: 'MONTAÑA', hint: 'Elevación natural del terreno.' }] },
-        { theme: 'geografía', bonus: 3, targetPoints: 3, words: [{ word: 'VOLCAN', hint: 'Montaña que puede expulsar lava.' }, { word: 'DESIERTO', hint: 'Zona árida con poca lluvia.' }, { word: 'OCEANO', hint: 'Gran masa de agua salada.' }] },
-        { theme: 'salud', bonus: 3, targetPoints: 3, words: [{ word: 'HOSPITAL', hint: 'Centro de atención médica.' }, { word: 'VACUNA', hint: 'Previene enfermedades.' }, { word: 'TERAPIA', hint: 'Tratamiento para mejorar salud.' }] },
-        { theme: 'ciencia', bonus: 3, targetPoints: 3, words: [{ word: 'ECLIPSE', hint: 'Alineación de cuerpos celestes.' }, { word: 'ATOMO', hint: 'Unidad básica de la materia.' }, { word: 'GALAXIA', hint: 'Conjunto enorme de estrellas.' }] },
-        { theme: 'sociedad', bonus: 3, targetPoints: 3, words: [{ word: 'DEMOCRACIA', hint: 'Sistema político participativo.' }, { word: 'CIUDADANIA', hint: 'Condición de pertenencia a un Estado.' }, { word: 'DERECHOS', hint: 'Garantías de las personas.' }] },
-        { theme: 'historia', bonus: 2, targetPoints: 3, words: [{ word: 'ARQUEOLOGIA', hint: 'Estudia culturas antiguas por restos.' }, { word: 'REVOLUCION', hint: 'Cambio profundo de un sistema.' }, { word: 'IMPERIO', hint: 'Organización política extensa histórica.' }] },
-        { theme: 'ecología', bonus: 2, targetPoints: 3, words: [{ word: 'BIODIVERSIDAD', hint: 'Variedad de especies en un entorno.' }, { word: 'ECOSISTEMA', hint: 'Relación entre seres vivos y entorno.' }, { word: 'RECICLAJE', hint: 'Transformar residuos para reutilizar.' }] },
-        { theme: 'matemática', bonus: 2, targetPoints: 3, words: [{ word: 'HIPOTENUSA', hint: 'Lado mayor del triángulo rectángulo.' }, { word: 'FRACCION', hint: 'Expresa partes de un todo.' }, { word: 'GEOMETRIA', hint: 'Rama que estudia formas y espacio.' }] },
-        { theme: 'lengua', bonus: 2, targetPoints: 3, words: [{ word: 'METAFORA', hint: 'Figura literaria de comparación implícita.' }, { word: 'SINTAXIS', hint: 'Reglas para combinar palabras.' }, { word: 'SEMANTICA', hint: 'Estudio del significado.' }] },
-        { theme: 'finanzas', bonus: 2, targetPoints: 3, words: [{ word: 'CRIPTOMONEDA', hint: 'Activo digital con criptografía.' }, { word: 'INVERSION', hint: 'Colocar dinero para obtener ganancia.' }, { word: 'AHORRO', hint: 'Parte del ingreso que no se gasta.' }] },
-        { theme: 'biología', bonus: 2, targetPoints: 3, words: [{ word: 'NEUROPLASTICIDAD', hint: 'Capacidad del cerebro para adaptarse.' }, { word: 'MITOCONDRIA', hint: 'Organelo que produce energía celular.' }, { word: 'GENETICA', hint: 'Estudia herencia biológica.' }] },
-        { theme: 'física', bonus: 2, targetPoints: 3, words: [{ word: 'TERMODINAMICA', hint: 'Estudia calor y energía.' }, { word: 'GRAVEDAD', hint: 'Fuerza de atracción entre masas.' }, { word: 'INERCIA', hint: 'Tendencia a mantener estado de movimiento.' }] },
-        { theme: 'educación', bonus: 2, targetPoints: 3, words: [{ word: 'INTERDISCIPLINARIO', hint: 'Integra varias áreas de conocimiento.' }, { word: 'PEDAGOGIA', hint: 'Disciplina sobre enseñanza.' }, { word: 'CURRICULO', hint: 'Plan de estudios estructurado.' }] },
+        { theme: 'escuela', bonus: 4, targetPoints: 3, words: [{ word: 'MOCHILA', hint: 'Sirve para cargar útiles.' }, { word: 'CUADERNO', hint: 'Se usa para tomar notas.' }, { word: 'PIZARRA', hint: 'Superficie donde se escribe en clase.' }] },
+        { theme: 'movilidad', bonus: 3, targetPoints: 3, words: [{ word: 'AUTOBUS', hint: 'Transporte público colectivo.' }, { word: 'BICICLETA', hint: 'Vehículo de dos ruedas.' }, { word: 'SEMAFORO', hint: 'Regula el tránsito en cruces.' }] },
+        { theme: 'tiempo', bonus: 3, targetPoints: 3, words: [{ word: 'SEMANA', hint: 'Período de siete días.' }, { word: 'ESTACION', hint: 'División climática del año.' }, { word: 'CALENDARIO', hint: 'Organiza días y meses.' }] },
+        { theme: 'naturaleza', bonus: 3, targetPoints: 3, words: [{ word: 'BOSQUE', hint: 'Terreno poblado de árboles.' }, { word: 'MONTAÑA', hint: 'Elevación natural del terreno.' }, { word: 'MURCIELAGO', hint: 'Mamífero que vuela de noche.' }] },
+        { theme: 'salud', bonus: 3, targetPoints: 3, words: [{ word: 'VACUNA', hint: 'Previene enfermedades.' }, { word: 'TERAPIA', hint: 'Tratamiento para mejorar salud.' }, { word: 'HOSPITAL', hint: 'Centro de atención médica.' }] },
+        { theme: 'ciencia', bonus: 3, targetPoints: 3, words: [{ word: 'ATOMO', hint: 'Unidad básica de la materia.' }, { word: 'ECLIPSE', hint: 'Alineación de cuerpos celestes.' }, { word: 'GALAXIA', hint: 'Conjunto enorme de estrellas.' }] },
+        { theme: 'sociedad', bonus: 3, targetPoints: 3, words: [{ word: 'DERECHOS', hint: 'Garantías de las personas.' }, { word: 'DEMOCRACIA', hint: 'Sistema político participativo.' }, { word: 'CIUDADANIA', hint: 'Condición de pertenencia a un Estado.' }] },
+        { theme: 'historia', bonus: 2, targetPoints: 3, words: [{ word: 'IMPERIO', hint: 'Organización política extensa histórica.' }, { word: 'REVOLUCION', hint: 'Cambio profundo de un sistema.' }, { word: 'ARQUEOLOGIA', hint: 'Estudia culturas antiguas por restos.' }] },
+        { theme: 'ecología', bonus: 2, targetPoints: 3, words: [{ word: 'RECICLAJE', hint: 'Transformar residuos para reutilizar.' }, { word: 'ECOSISTEMA', hint: 'Relación entre seres vivos y entorno.' }, { word: 'BIODIVERSIDAD', hint: 'Variedad de especies en un entorno.' }] },
+        { theme: 'matemática', bonus: 2, targetPoints: 3, words: [{ word: 'FRACCION', hint: 'Expresa partes de un todo.' }, { word: 'GEOMETRIA', hint: 'Rama que estudia formas y espacio.' }, { word: 'HIPOTENUSA', hint: 'Lado mayor del triángulo rectángulo.' }] },
+        { theme: 'lengua', bonus: 2, targetPoints: 3, words: [{ word: 'SINTAXIS', hint: 'Reglas para combinar palabras.' }, { word: 'SEMANTICA', hint: 'Estudio del significado.' }, { word: 'METAFORA', hint: 'Figura literaria de comparación implícita.' }] },
+        { theme: 'finanzas', bonus: 2, targetPoints: 3, words: [{ word: 'AHORRO', hint: 'Parte del ingreso que no se gasta.' }, { word: 'INVERSION', hint: 'Colocar dinero para obtener ganancia.' }, { word: 'CRIPTOMONEDA', hint: 'Activo digital con criptografía.' }] },
+        { theme: 'biología', bonus: 2, targetPoints: 3, words: [{ word: 'GENETICA', hint: 'Estudia herencia biológica.' }, { word: 'MITOCONDRIA', hint: 'Organelo que produce energía celular.' }, { word: 'NEUROPLASTICIDAD', hint: 'Capacidad del cerebro para adaptarse.' }] },
+        { theme: 'física', bonus: 2, targetPoints: 3, words: [{ word: 'INERCIA', hint: 'Tendencia a mantener estado de movimiento.' }, { word: 'GRAVEDAD', hint: 'Fuerza de atracción entre masas.' }, { word: 'TERMODINAMICA', hint: 'Estudia calor y energía.' }] },
+        { theme: 'educación', bonus: 2, targetPoints: 3, words: [{ word: 'PEDAGOGIA', hint: 'Disciplina sobre enseñanza.' }, { word: 'CURRICULO', hint: 'Plan de estudios estructurado.' }, { word: 'INTERDISCIPLINARIO', hint: 'Integra varias áreas de conocimiento.' }] },
+      ];
+
+      const WORD_LENGTH_RULES = [
+        { min: 3, max: 4 }, { min: 4, max: 5 }, { min: 4, max: 6 }, { min: 5, max: 6 },
+        { min: 5, max: 7 }, { min: 6, max: 8 }, { min: 6, max: 9 }, { min: 6, max: 9 },
+        { min: 7, max: 10 }, { min: 7, max: 10 }, { min: 7, max: 10 }, { min: 8, max: 11 },
+        { min: 8, max: 11 }, { min: 9, max: 12 }, { min: 9, max: 12 }, { min: 9, max: 12 },
+        { min: 10, max: 13 }, { min: 10, max: 14 }, { min: 10, max: 14 }, { min: 11, max: 16 },
       ];
 
       const I18N = {
@@ -413,24 +433,27 @@
         return text;
       };
 
-      function renderLogo() {
-        const logoColor = getComputedStyle(document.documentElement).getPropertyValue('--logo').trim() || '#fff';
-        const logoSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='560' height='120' viewBox='0 0 560 120'>
-          <rect width='560' height='120' fill='none'/>
-          <g fill='none' stroke='${logoColor}' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'>
-            <path d='M24 102h130'/><path d='M54 102v-60h62'/><path d='M85 42l-31 31'/><circle cx='122' cy='25' r='18'/>
-            <path d='M122 43v14'/><circle cx='122' cy='66' r='8'/><path d='M122 74v20'/><path d='M110 94c0-8 6-14 12-14s12 6 12 14'/>
-          </g>
-          <text x='176' y='84' font-size='78' font-family='Arial, Helvetica, sans-serif' font-weight='700' fill='${logoColor}'>Memora</text>
-        </svg>`;
-        appLogoEl.src = `data:image/svg+xml;utf8,${encodeURIComponent(logoSvg)}`;
-      }
+      const logoLightSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='680' height='140' viewBox='0 0 680 140'>
+        <g fill='none' stroke='#000' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'>
+          <path d='M22 118h170'/><path d='M52 118v-75h80'/><path d='M95 43l-43 50'/>
+          <circle cx='132' cy='28' r='23'/><path d='M132 51v18'/><circle cx='132' cy='78' r='11'/><path d='M132 89v24'/>
+          <path d='M116 113c0-10 7-18 16-18s16 8 16 18'/>
+        </g>
+        <text x='220' y='104' font-size='104' font-family='Arial, Helvetica, sans-serif' font-weight='700' fill='#000'>Memora</text>
+      </svg>`;
+      const logoDarkSvg = logoLightSvg.replaceAll("'#000'", "'#fff'");
+      const logoLightSrc = `data:image/svg+xml;utf8,${encodeURIComponent(logoLightSvg)}`;
+      const logoDarkSrc = `data:image/svg+xml;utf8,${encodeURIComponent(logoDarkSvg)}`;
 
       function setTheme(theme) {
         currentTheme = theme === 'light' ? 'light' : 'dark';
-        if (currentTheme === 'light') document.documentElement.setAttribute('data-theme', 'light');
-        else document.documentElement.removeAttribute('data-theme');
-        renderLogo();
+        if (currentTheme === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+          appLogoEl.src = logoLightSrc;
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+          appLogoEl.src = logoDarkSrc;
+        }
       }
 
       function applyLanguage() {
@@ -454,7 +477,13 @@
       function currentLevel() { return LEVELS[levelIndex]; }
       function levelAttempts(index) { if (index < 6) return 8; if (index < 12) return 7; if (index < 17) return 6; return 5; }
       function levelTime(index) { if (index < 6) return 55; if (index < 12) return 50; if (index < 17) return 45; return 40; }
-      function normalizeText(value) { return value.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().trim(); }
+      function levelWordBounds(index = levelIndex) { return WORD_LENGTH_RULES[index] || { min: 3, max: 16 }; }
+      function isWordLengthAllowed(word, index = levelIndex) {
+        const len = sanitizeWord(word).length;
+        const bounds = levelWordBounds(index);
+        return len >= bounds.min && len <= bounds.max;
+      }
+      function normalizeText(value) { return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().trim(); }
       function sanitizeWord(rawWord) { return normalizeText(rawWord).replace(/[^A-ZÑ]/g, ''); }
 
       async function fetchJsonWithTimeout(url, timeoutMs = 3000) {
@@ -507,11 +536,11 @@
           const endpoint = RANDOM_WORD_ENDPOINTS[i % RANDOM_WORD_ENDPOINTS.length];
           const data = await fetchJsonWithTimeout(endpoint);
           const baseWord = Array.isArray(data) ? sanitizeWord(data[0] || '') : '';
-          if (!baseWord || baseWord.length < 4 || usedWordsCache.has(`${currentLang}:${baseWord}`)) continue;
+          if (!baseWord || usedWordsCache.has(`${currentLang}:${baseWord}`) || !isWordLengthAllowed(baseWord)) continue;
           const definitionEn = await fetchOnlineDefinitionEn(baseWord);
           const localizedWord = currentLang === 'en' ? baseWord : sanitizeWord(await translateText(baseWord.toLowerCase(), currentLang, 'en'));
           const localizedHint = currentLang === 'en' ? definitionEn : await translateText(definitionEn, currentLang, 'en');
-          if (!localizedWord || localizedWord.length < 3) continue;
+          if (!localizedWord || !isWordLengthAllowed(localizedWord)) continue;
           return { word: localizedWord, hint: localizedHint, theme: await translateText(currentLevel().theme, currentLang, 'es') };
         }
         return null;
@@ -519,16 +548,18 @@
 
       async function pickOfflineWordEntry() {
         const words = currentLevel().words;
-        const pool = words.filter((entry) => !usedWordsCache.has(`${currentLang}:${sanitizeWord(entry.word)}`));
+        const pool = words.filter((entry) => !usedWordsCache.has(`${currentLang}:${sanitizeWord(entry.word)}`) && isWordLengthAllowed(entry.word));
         const entry = (pool.length ? pool : words)[Math.floor(Math.random() * (pool.length ? pool.length : words.length))];
         return localizeWordEntry(entry);
       }
 
       async function pickWordEntry() {
-        if (ONLINE_MODE) {
-          const online = await fetchOnlineWordEntry();
-          if (online) return online;
-        }
+        try {
+          if (ONLINE_MODE) {
+            const online = await fetchOnlineWordEntry();
+            if (online) return online;
+          }
+        } catch {}
         return pickOfflineWordEntry();
       }
 
@@ -571,7 +602,7 @@
         gameOver = true;
         clearInterval(timerId);
         revealWord();
-        openResultModal({ win: false, title: t('tryAgain'), actionText: t('restartModal'), reason, onAction: () => startLevel() });
+        openResultModal({ win: false, title: t('tryAgain'), actionText: t('restartModal'), reason, onAction: async () => startLevel() });
       }
 
       function finishWordSolved() {
@@ -581,10 +612,10 @@
         updateStatus();
         if (levelPoints >= currentLevel().targetPoints) {
           if (levelIndex === MAX_LEVELS - 1) {
-            openResultModal({ win: true, title: t('done'), actionText: t('back1'), onAction: () => { levelIndex = 0; startLevel(); } });
+            openResultModal({ win: true, title: t('done'), actionText: t('back1'), onAction: async () => { levelIndex = 0; await startLevel(); } });
             return;
           }
-          openResultModal({ win: true, title: t('levelDone'), actionText: t('nextLevel'), onAction: () => { levelIndex += 1; startLevel(); } });
+          openResultModal({ win: true, title: t('levelDone'), actionText: t('nextLevel'), onAction: async () => { levelIndex += 1; await startLevel(); } });
           return;
         }
         openResultModal({ win: true, title: t('wordDone'), actionText: t('nextWord'), onAction: () => startRound() });
@@ -619,9 +650,9 @@
         modalEl.classList.add('hidden');
 
         const entry = await pickWordEntry();
-        secretWord = entry.word;
-        currentHint = entry.hint;
-        currentThemeLabel = entry.theme || currentLevel().theme;
+        secretWord = sanitizeWord(entry?.word || currentLevel().words[0].word);
+        currentHint = entry?.hint || currentLevel().words[0].hint;
+        currentThemeLabel = entry?.theme || currentLevel().theme;
         usedWordsCache.add(`${currentLang}:${secretWord}`);
 
         guessedLetters = new Set();
@@ -640,7 +671,7 @@
         guessInput.focus();
       }
 
-      function startLevel() { levelPoints = 0; startRound(); }
+      async function startLevel() { levelPoints = 0; await startRound(); }
 
       function handleLetterGuess(rawValue) {
         ensureTimerStarted();
@@ -689,7 +720,7 @@
         if (!consumeAttemptAndCheckLose(t('noAttempts'))) { messageEl.textContent = t('hintUsed'); messageEl.className = 'message'; }
       });
 
-      restartBtn.addEventListener('click', () => { startLevel(); ensureTimerStarted(); });
+      restartBtn.addEventListener('click', async () => { await startLevel(); ensureTimerStarted(); });
 
       themeBtn.addEventListener('click', () => {
         setTheme(currentTheme === 'dark' ? 'light' : 'dark');
