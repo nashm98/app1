@@ -260,6 +260,11 @@
         { theme: 'educación', bonus: 2, targetPoints: 3, words: [{ word: 'INTERDISCIPLINARIO', hint: 'Integra varias áreas de conocimiento.' }, { word: 'PEDAGOGIA', hint: 'Disciplina sobre enseñanza.' }, { word: 'CURRICULO', hint: 'Plan de estudios estructurado.' }] },
       ];
 
+      const ONLINE_MODE = true;
+      const RANDOM_WORD_ENDPOINTS = [
+        'https://random-word-api.herokuapp.com/word?number=1',
+        'https://random-word-api.vercel.app/api?words=1',
+      ];
       const MAX_LEVELS = LEVELS.length;
       const POINTS_PER_WORD = 1;
 
@@ -300,6 +305,9 @@
       let gameOver = false;
       let hintUsed = false;
 
+      const usedWordsCache = new Set();
+      const definitionCache = new Map();
+
       function currentLevel() {
         return LEVELS[levelIndex];
       }
@@ -318,15 +326,98 @@
         return 40;
       }
 
-      function pickRandomWordEntry() {
-        const words = currentLevel().words;
-        if (usedWordIndexes.length === words.length) {
-          usedWordIndexes = [];
+      function normalizeText(value) {
+        return value
+          .normalize('NFD')
+          .replace(/[̀-ͯ]/g, '')
+          .toUpperCase()
+          .trim();
+      }
+
+      function sanitizeWord(rawWord) {
+        return normalizeText(rawWord).replace(/[^A-ZÑ]/g, '');
+      }
+
+      async function fetchJsonWithTimeout(url, timeoutMs = 2500) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+          const response = await fetch(url, { signal: controller.signal });
+          if (!response.ok) return null;
+          return await response.json();
+        } catch {
+          return null;
+        } finally {
+          clearTimeout(timer);
         }
-        const available = words.map((_, i) => i).filter((i) => !usedWordIndexes.includes(i));
-        const selected = available[Math.floor(Math.random() * available.length)];
+      }
+
+      async function fetchOnlineDefinition(word) {
+        const lower = word.toLowerCase();
+        if (definitionCache.has(lower)) {
+          return definitionCache.get(lower);
+        }
+
+        const data = await fetchJsonWithTimeout(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(lower)}`);
+        let definition = `Palabra obtenida online para el nivel de ${currentLevel().theme}.`;
+
+        if (Array.isArray(data) && data[0]?.meanings?.length) {
+          const firstMeaning = data[0].meanings[0];
+          const firstDef = firstMeaning?.definitions?.[0]?.definition;
+          if (firstDef) {
+            definition = `Definición online: ${firstDef}`;
+          }
+        }
+
+        definitionCache.set(lower, definition);
+        return definition;
+      }
+
+      async function fetchOnlineWordEntry() {
+        for (let attempt = 0; attempt < 8; attempt += 1) {
+          const endpoint = RANDOM_WORD_ENDPOINTS[attempt % RANDOM_WORD_ENDPOINTS.length];
+          const data = await fetchJsonWithTimeout(endpoint);
+          const candidate = Array.isArray(data) ? sanitizeWord(data[0] || '') : '';
+
+          if (!candidate || candidate.length < 4) continue;
+          if (usedWordsCache.has(candidate)) continue;
+
+          const hint = await fetchOnlineDefinition(candidate);
+          return { word: candidate, hint, source: 'online' };
+        }
+
+        return null;
+      }
+
+      function pickOfflineWordEntry() {
+        const words = currentLevel().words;
+
+        let availableIndexes = words
+          .map((entry, index) => ({ index, normalized: sanitizeWord(entry.word) }))
+          .filter(({ normalized }) => normalized && !usedWordsCache.has(normalized))
+          .map(({ index }) => index);
+
+        if (availableIndexes.length === 0) {
+          availableIndexes = words.map((_, index) => index);
+        }
+
+        const selected = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
         usedWordIndexes.push(selected);
-        return words[selected];
+        const entry = words[selected];
+
+        return {
+          word: sanitizeWord(entry.word),
+          hint: entry.hint,
+          source: 'offline',
+        };
+      }
+
+      async function pickWordEntry() {
+        if (ONLINE_MODE) {
+          const online = await fetchOnlineWordEntry();
+          if (online) return online;
+        }
+        return pickOfflineWordEntry();
       }
 
       function renderWord() {
@@ -459,12 +550,20 @@
         }
       }
 
-      function startRound() {
+      async function startRound() {
         const level = currentLevel();
-        const entry = pickRandomWordEntry();
 
-        secretWord = entry.word.toUpperCase();
+        gameOver = true;
+        hintEl.textContent = 'Pista: (oculta)';
+        messageEl.textContent = 'Cargando palabra aleatoria...';
+        messageEl.className = 'message';
+        modalEl.classList.add('hidden');
+
+        const entry = await pickWordEntry();
+        secretWord = entry.word;
         currentHint = entry.hint;
+        usedWordsCache.add(secretWord);
+
         guessedLetters = new Set();
         wrongLetters = new Set();
         attemptsLeft = levelAttempts(levelIndex);
@@ -473,10 +572,13 @@
         timerStarted = false;
         hintUsed = false;
 
-        hintEl.textContent = 'Pista: (oculta)';
-        messageEl.textContent = 'Debes acumular puntos para superar el nivel.';
-        messageEl.className = 'message';
-        modalEl.classList.add('hidden');
+        if (entry.source === 'online') {
+          messageEl.textContent = 'Modo online activo: palabra aleatoria nueva.';
+          messageEl.className = 'message win';
+        } else {
+          messageEl.textContent = 'Modo offline (fallback): no hubo conexión estable a la fuente online.';
+          messageEl.className = 'message';
+        }
 
         renderWord();
         updateStatus();
@@ -488,14 +590,6 @@
         levelPoints = 0;
         usedWordIndexes = [];
         startRound();
-      }
-
-      function normalizeText(value) {
-        return value
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .toUpperCase()
-          .trim();
       }
 
       function handleLetterGuess(rawValue) {
@@ -611,6 +705,7 @@
       });
 
       startLevel();
+
     </script>
   </body>
 </html>
