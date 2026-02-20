@@ -12,7 +12,6 @@
         --panel-2: #1b2640;
         --text: #f8fbff;
         --accent: #22d3ee;
-        --accent-2: #8b5cf6;
         --good: #34d399;
         --bad: #fb7185;
         --muted: #9fb2d1;
@@ -30,7 +29,7 @@
       }
 
       .game {
-        width: min(860px, 100%);
+        width: min(900px, 100%);
         background: linear-gradient(165deg, var(--panel) 0%, var(--panel-2) 100%);
         border: 1px solid #2b3b61;
         border-radius: 18px;
@@ -45,7 +44,7 @@
 
       .status {
         display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns: repeat(6, minmax(0, 1fr));
         gap: 10px;
         margin-bottom: 16px;
       }
@@ -59,7 +58,7 @@
 
       .card strong {
         display: block;
-        font-size: 1.25rem;
+        font-size: 1.15rem;
       }
 
       .meta {
@@ -122,6 +121,12 @@
         font-size: 0.95rem;
         font-weight: 600;
         cursor: pointer;
+        transition: transform 120ms ease, filter 160ms ease;
+      }
+
+      button:hover {
+        filter: brightness(1.06);
+        transform: translateY(-1px);
       }
 
       .guess-btn {
@@ -138,7 +143,6 @@
         background: linear-gradient(135deg, #f59e0b 0%, #fb7185 100%);
         color: #1a0e00;
       }
-
 
       .history,
       .hint {
@@ -158,24 +162,8 @@
         font-weight: 600;
       }
 
-      .win {
-        color: var(--good);
-      }
-
-      .lose {
-        color: var(--bad);
-      }
-
-
-      button {
-        transition: transform 120ms ease, filter 160ms ease, box-shadow 160ms ease;
-      }
-
-      button:hover {
-        filter: brightness(1.06);
-        transform: translateY(-1px);
-      }
-
+      .win { color: var(--good); }
+      .lose { color: var(--bad); }
 
       .modal {
         position: fixed;
@@ -188,12 +176,10 @@
         z-index: 20;
       }
 
-      .modal.hidden {
-        display: none;
-      }
+      .modal.hidden { display: none; }
 
       .modal-card {
-        width: min(520px, 100%);
+        width: min(560px, 100%);
         background: linear-gradient(165deg, #10192e 0%, #1a2742 100%);
         border: 1px solid #35507e;
         border-radius: 16px;
@@ -202,23 +188,12 @@
         text-align: center;
       }
 
-      .modal-card h2 {
-        margin: 0 0 10px;
-      }
-
-      .modal-card p {
-        margin: 0 0 16px;
-        color: var(--muted);
-      }
+      .modal-card h2 { margin: 0 0 10px; }
+      .modal-card p { margin: 0 0 16px; color: var(--muted); }
 
       @media (max-width: 760px) {
-        .status {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        #guess-input {
-          width: 100%;
-        }
+        .status { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        #guess-input { width: 100%; }
       }
     </style>
   </head>
@@ -229,6 +204,7 @@
 
       <section class="status">
         <div class="card">Nivel<strong id="level">1/20</strong></div>
+        <div class="card">Puntos<strong id="points">0/3</strong></div>
         <div class="card">Tiempo<strong id="time">45</strong></div>
         <div class="card">Intentos<strong id="attempts">7</strong></div>
         <div class="card">Errores<strong id="errors">0</strong></div>
@@ -262,31 +238,30 @@
 
     <script>
       const LEVELS = [
-        { word: 'CASA', hint: 'Lugar donde vives.', theme: 'vida diaria', bonus: 4 },
-        { word: 'PERRO', hint: 'Animal doméstico muy común.', theme: 'animales', bonus: 4 },
-        { word: 'MESA', hint: 'Mueble para comer o trabajar.', theme: 'hogar', bonus: 4 },
-        { word: 'LLAVE', hint: 'Sirve para abrir una puerta.', theme: 'objetos', bonus: 4 },
-        { word: 'PARQUE', hint: 'Espacio verde para caminar o jugar.', theme: 'ciudad', bonus: 4 },
-        { word: 'BICICLETA', hint: 'Transporte de dos ruedas.', theme: 'movilidad', bonus: 4 },
-        { word: 'CALENDARIO', hint: 'Organiza días, semanas y meses.', theme: 'tiempo', bonus: 3 },
-        { word: 'MURCIELAGO', hint: 'Mamífero que vuela de noche.', theme: 'naturaleza', bonus: 3 },
-        { word: 'VOLCAN', hint: 'Montaña que puede expulsar lava.', theme: 'geografía', bonus: 3 },
-        { word: 'HOSPITAL', hint: 'Lugar de atención médica.', theme: 'salud', bonus: 3 },
-        { word: 'ECLIPSE', hint: 'Fenómeno astronómico entre astros.', theme: 'ciencia', bonus: 3 },
-        { word: 'DEMOCRACIA', hint: 'Sistema político de participación ciudadana.', theme: 'sociedad', bonus: 3 },
-        { word: 'ARQUEOLOGIA', hint: 'Estudia culturas antiguas por restos materiales.', theme: 'historia', bonus: 2 },
-        { word: 'BIODIVERSIDAD', hint: 'Variedad de especies en un ecosistema.', theme: 'ecología', bonus: 2 },
-        { word: 'HIPOTENUSA', hint: 'Lado mayor en un triángulo rectángulo.', theme: 'matemática', bonus: 2 },
-        { word: 'METAFORA', hint: 'Figura literaria que compara sin "como".', theme: 'lengua', bonus: 2 },
-        { word: 'CRIPTOMONEDA', hint: 'Activo digital basado en criptografía.', theme: 'finanzas', bonus: 2 },
-        { word: 'NEUROPLASTICIDAD', hint: 'Capacidad del cerebro de adaptarse.', theme: 'biología', bonus: 2 },
-        { word: 'TERMODINAMICA', hint: 'Rama de la física sobre calor y energía.', theme: 'física', bonus: 2 },
-        { word: 'INTERDISCIPLINARIO', hint: 'Integra conocimientos de distintas áreas.', theme: 'educación', bonus: 2 },
+        { theme: 'vida diaria', bonus: 4, targetPoints: 3, words: [{ word: 'CASA', hint: 'Lugar donde vives.' }, { word: 'LLAVE', hint: 'Sirve para abrir puertas.' }, { word: 'MESA', hint: 'Mueble para comer o trabajar.' }] },
+        { theme: 'animales', bonus: 4, targetPoints: 3, words: [{ word: 'PERRO', hint: 'Animal doméstico leal.' }, { word: 'GATO', hint: 'Felino doméstico.' }, { word: 'CONEJO', hint: 'Animal de orejas largas.' }] },
+        { theme: 'ciudad', bonus: 4, targetPoints: 3, words: [{ word: 'PARQUE', hint: 'Espacio verde urbano.' }, { word: 'PLAZA', hint: 'Espacio público de reunión.' }, { word: 'CALLE', hint: 'Vía dentro de la ciudad.' }] },
+        { theme: 'hogar', bonus: 4, targetPoints: 3, words: [{ word: 'VENTANA', hint: 'Abertura que deja entrar luz.' }, { word: 'COCINA', hint: 'Lugar donde preparas comida.' }, { word: 'SILLA', hint: 'Asiento con respaldo.' }] },
+        { theme: 'objetos', bonus: 4, targetPoints: 3, words: [{ word: 'RELOJ', hint: 'Indica la hora.' }, { word: 'MOCHILA', hint: 'Sirve para cargar cosas.' }, { word: 'CUADERNO', hint: 'Se usa para escribir notas.' }] },
+        { theme: 'movilidad', bonus: 4, targetPoints: 3, words: [{ word: 'BICICLETA', hint: 'Vehículo de dos ruedas.' }, { word: 'AUTOBUS', hint: 'Transporte público colectivo.' }, { word: 'METRO', hint: 'Tren urbano subterráneo.' }] },
+        { theme: 'tiempo', bonus: 3, targetPoints: 3, words: [{ word: 'CALENDARIO', hint: 'Organiza días y meses.' }, { word: 'SEMANA', hint: 'Período de siete días.' }, { word: 'ESTACION', hint: 'División climática del año.' }] },
+        { theme: 'naturaleza', bonus: 3, targetPoints: 3, words: [{ word: 'MURCIELAGO', hint: 'Mamífero que vuela de noche.' }, { word: 'BOSQUE', hint: 'Terreno poblado de árboles.' }, { word: 'MONTAÑA', hint: 'Elevación natural del terreno.' }] },
+        { theme: 'geografía', bonus: 3, targetPoints: 3, words: [{ word: 'VOLCAN', hint: 'Montaña que puede expulsar lava.' }, { word: 'DESIERTO', hint: 'Zona árida con poca lluvia.' }, { word: 'OCEANO', hint: 'Gran masa de agua salada.' }] },
+        { theme: 'salud', bonus: 3, targetPoints: 3, words: [{ word: 'HOSPITAL', hint: 'Centro de atención médica.' }, { word: 'VACUNA', hint: 'Previene enfermedades.' }, { word: 'TERAPIA', hint: 'Tratamiento para mejorar salud.' }] },
+        { theme: 'ciencia', bonus: 3, targetPoints: 3, words: [{ word: 'ECLIPSE', hint: 'Alineación de cuerpos celestes.' }, { word: 'ATOMO', hint: 'Unidad básica de la materia.' }, { word: 'GALAXIA', hint: 'Conjunto enorme de estrellas.' }] },
+        { theme: 'sociedad', bonus: 3, targetPoints: 3, words: [{ word: 'DEMOCRACIA', hint: 'Sistema político participativo.' }, { word: 'CIUDADANIA', hint: 'Condición de pertenencia a un Estado.' }, { word: 'DERECHOS', hint: 'Garantías de las personas.' }] },
+        { theme: 'historia', bonus: 2, targetPoints: 3, words: [{ word: 'ARQUEOLOGIA', hint: 'Estudia culturas antiguas por restos.' }, { word: 'REVOLUCION', hint: 'Cambio profundo de un sistema.' }, { word: 'IMPERIO', hint: 'Organización política extensa histórica.' }] },
+        { theme: 'ecología', bonus: 2, targetPoints: 3, words: [{ word: 'BIODIVERSIDAD', hint: 'Variedad de especies en un entorno.' }, { word: 'ECOSISTEMA', hint: 'Relación entre seres vivos y entorno.' }, { word: 'RECICLAJE', hint: 'Transformar residuos para reutilizar.' }] },
+        { theme: 'matemática', bonus: 2, targetPoints: 3, words: [{ word: 'HIPOTENUSA', hint: 'Lado mayor del triángulo rectángulo.' }, { word: 'FRACCION', hint: 'Expresa partes de un todo.' }, { word: 'GEOMETRIA', hint: 'Rama que estudia formas y espacio.' }] },
+        { theme: 'lengua', bonus: 2, targetPoints: 3, words: [{ word: 'METAFORA', hint: 'Figura literaria de comparación implícita.' }, { word: 'SINTAXIS', hint: 'Reglas para combinar palabras.' }, { word: 'SEMANTICA', hint: 'Estudio del significado.' }] },
+        { theme: 'finanzas', bonus: 2, targetPoints: 3, words: [{ word: 'CRIPTOMONEDA', hint: 'Activo digital con criptografía.' }, { word: 'INVERSION', hint: 'Colocar dinero para obtener ganancia.' }, { word: 'AHORRO', hint: 'Parte del ingreso que no se gasta.' }] },
+        { theme: 'biología', bonus: 2, targetPoints: 3, words: [{ word: 'NEUROPLASTICIDAD', hint: 'Capacidad del cerebro para adaptarse.' }, { word: 'MITOCONDRIA', hint: 'Organelo que produce energía celular.' }, { word: 'GENETICA', hint: 'Estudia herencia biológica.' }] },
+        { theme: 'física', bonus: 2, targetPoints: 3, words: [{ word: 'TERMODINAMICA', hint: 'Estudia calor y energía.' }, { word: 'GRAVEDAD', hint: 'Fuerza de atracción entre masas.' }, { word: 'INERCIA', hint: 'Tendencia a mantener estado de movimiento.' }] },
+        { theme: 'educación', bonus: 2, targetPoints: 3, words: [{ word: 'INTERDISCIPLINARIO', hint: 'Integra varias áreas de conocimiento.' }, { word: 'PEDAGOGIA', hint: 'Disciplina sobre enseñanza.' }, { word: 'CURRICULO', hint: 'Plan de estudios estructurado.' }] },
       ];
 
       const MAX_LEVELS = LEVELS.length;
-      const BASE_ATTEMPTS = 8;
-      const BASE_TIME = 55;
+      const POINTS_PER_WORD = 1;
 
       const wordEl = document.getElementById('word');
       const timeEl = document.getElementById('time');
@@ -296,6 +271,7 @@
       const messageEl = document.getElementById('message');
       const hintEl = document.getElementById('hint');
       const levelEl = document.getElementById('level');
+      const pointsEl = document.getElementById('points');
       const metaEl = document.getElementById('meta');
       const bonusEl = document.getElementById('bonus');
 
@@ -304,21 +280,25 @@
       const hintBtn = document.getElementById('hint-btn');
       const restartBtn = document.getElementById('restart-btn');
 
-      let levelIndex = 0;
-      let secretWord = '';
-      let guessedLetters = new Set();
-      let wrongLetters = new Set();
-      let attemptsLeft = BASE_ATTEMPTS;
-      let timeLeft = BASE_TIME;
-      let timerId;
-      let timerStarted = false;
-      let gameOver = false;
-      let hintUsed = false;
-
       const modalEl = document.getElementById('result-modal');
       const modalTitleEl = document.getElementById('modal-title');
       const modalTextEl = document.getElementById('modal-text');
       const modalActionBtn = document.getElementById('modal-action');
+
+      let levelIndex = 0;
+      let levelPoints = 0;
+      let usedWordIndexes = [];
+
+      let secretWord = '';
+      let currentHint = '';
+      let guessedLetters = new Set();
+      let wrongLetters = new Set();
+      let attemptsLeft = 8;
+      let timeLeft = 55;
+      let timerId;
+      let timerStarted = false;
+      let gameOver = false;
+      let hintUsed = false;
 
       function currentLevel() {
         return LEVELS[levelIndex];
@@ -338,6 +318,17 @@
         return 40;
       }
 
+      function pickRandomWordEntry() {
+        const words = currentLevel().words;
+        if (usedWordIndexes.length === words.length) {
+          usedWordIndexes = [];
+        }
+        const available = words.map((_, i) => i).filter((i) => !usedWordIndexes.includes(i));
+        const selected = available[Math.floor(Math.random() * available.length)];
+        usedWordIndexes.push(selected);
+        return words[selected];
+      }
+
       function renderWord() {
         wordEl.innerHTML = '';
         for (const letter of secretWord) {
@@ -351,6 +342,7 @@
       function updateStatus() {
         const level = currentLevel();
         levelEl.textContent = `${levelIndex + 1}/${MAX_LEVELS}`;
+        pointsEl.textContent = `${levelPoints}/${level.targetPoints}`;
         timeEl.textContent = String(timeLeft);
         attemptsEl.textContent = String(attemptsLeft);
         errorsEl.textContent = String(wrongLetters.size);
@@ -364,69 +356,83 @@
       }
 
       function revealWord() {
-        for (const letter of secretWord) {
-          guessedLetters.add(letter);
-        }
+        for (const letter of secretWord) guessedLetters.add(letter);
         renderWord();
       }
 
-      function openResultModal(win, reason = '') {
-        const definitionText = `Definición: ${currentLevel().hint}`;
+      function openResultModal({ win, title, actionText, onAction, reason = '' }) {
+        const definitionText = `Definición: ${currentHint}`;
         modalEl.classList.remove('hidden');
-
-        if (win) {
-          modalTitleEl.textContent = 'Nivel superado';
-          modalTextEl.textContent = `${definitionText}`;
-
-          if (levelIndex === MAX_LEVELS - 1) {
-            modalActionBtn.textContent = 'Volver al nivel 1';
-            modalActionBtn.onclick = () => {
-              modalEl.classList.add('hidden');
-              levelIndex = 0;
-              startLevel();
-            };
-          } else {
-            modalActionBtn.textContent = 'Siguiente nivel';
-            modalActionBtn.onclick = () => {
-              modalEl.classList.add('hidden');
-              levelIndex += 1;
-              startLevel();
-            };
-          }
-          return;
-        }
-
-        modalTitleEl.textContent = 'Inténtalo de nuevo';
-        modalTextEl.textContent = `${definitionText}${reason ? ` · Motivo: ${reason}` : ''}`;
-        modalActionBtn.textContent = 'Comenzar de nuevo';
+        modalTitleEl.textContent = title;
+        modalTextEl.textContent = `${definitionText}${reason ? ` · ${reason}` : ''}`;
+        modalActionBtn.textContent = actionText;
         modalActionBtn.onclick = () => {
           modalEl.classList.add('hidden');
-          startLevel();
+          onAction();
         };
+
+        messageEl.textContent = 'Resultado disponible en la ventana emergente.';
+        messageEl.className = win ? 'message win' : 'message lose';
       }
 
-      function finishGame(win, reason = '') {
+      function finishLoss(reason = '') {
         gameOver = true;
         clearInterval(timerId);
+        revealWord();
+        openResultModal({
+          win: false,
+          title: 'Inténtalo de nuevo',
+          reason,
+          actionText: 'Comenzar de nuevo',
+          onAction: () => startLevel(),
+        });
+      }
 
-        if (win) {
-          messageEl.textContent = 'Resultado disponible en la ventana emergente.';
-          messageEl.className = 'message win';
-          openResultModal(true, reason);
+      function finishWordSolved() {
+        gameOver = true;
+        clearInterval(timerId);
+        levelPoints += POINTS_PER_WORD;
+        updateStatus();
+
+        if (levelPoints >= currentLevel().targetPoints) {
+          if (levelIndex === MAX_LEVELS - 1) {
+            openResultModal({
+              win: true,
+              title: 'Juego completado',
+              actionText: 'Volver al nivel 1',
+              onAction: () => {
+                levelIndex = 0;
+                startLevel();
+              },
+            });
+            return;
+          }
+
+          openResultModal({
+            win: true,
+            title: 'Nivel superado',
+            actionText: 'Siguiente nivel',
+            onAction: () => {
+              levelIndex += 1;
+              startLevel();
+            },
+          });
           return;
         }
 
-        revealWord();
-        messageEl.textContent = `Perdiste${reason ? ` (${reason})` : ''}.`;
-        messageEl.className = 'message lose';
-        openResultModal(false, reason);
+        openResultModal({
+          win: true,
+          title: 'Palabra acertada',
+          actionText: 'Siguiente palabra',
+          onAction: () => startRound(),
+        });
       }
 
       function consumeAttemptAndCheckLose(reason) {
         attemptsLeft -= 1;
         updateStatus();
         if (attemptsLeft <= 0) {
-          finishGame(false, reason);
+          finishLoss(reason);
           return true;
         }
         return false;
@@ -442,10 +448,7 @@
 
           timeLeft -= 1;
           updateStatus();
-
-          if (timeLeft <= 0) {
-            finishGame(false, 'se acabó el tiempo');
-          }
+          if (timeLeft <= 0) finishLoss('Se acabó el tiempo');
         }, 1000);
       }
 
@@ -456,9 +459,12 @@
         }
       }
 
-      function startLevel() {
+      function startRound() {
         const level = currentLevel();
-        secretWord = level.word.toUpperCase();
+        const entry = pickRandomWordEntry();
+
+        secretWord = entry.word.toUpperCase();
+        currentHint = entry.hint;
         guessedLetters = new Set();
         wrongLetters = new Set();
         attemptsLeft = levelAttempts(levelIndex);
@@ -468,15 +474,20 @@
         hintUsed = false;
 
         hintEl.textContent = 'Pista: (oculta)';
-        messageEl.textContent = 'El tiempo comienza en tu primera acción: letra, palabra o botón.';
+        messageEl.textContent = 'Debes acumular puntos para superar el nivel.';
         messageEl.className = 'message';
         modalEl.classList.add('hidden');
 
         renderWord();
         updateStatus();
-
         guessInput.value = '';
         guessInput.focus();
+      }
+
+      function startLevel() {
+        levelPoints = 0;
+        usedWordIndexes = [];
+        startRound();
       }
 
       function normalizeText(value) {
@@ -510,19 +521,20 @@
           updateStatus();
 
           if (allLettersGuessed()) {
-            finishGame(true);
+            finishWordSolved();
           } else {
             messageEl.textContent = `¡Correcta! Ganaste +${currentLevel().bonus}s.`;
             messageEl.className = 'message win';
           }
-        } else {
-          wrongLetters.add(guess);
-          updateStatus();
-          const isLost = consumeAttemptAndCheckLose('sin intentos');
-          if (!isLost) {
-            messageEl.textContent = 'Letra incorrecta: -1 intento.';
-            messageEl.className = 'message lose';
-          }
+          return;
+        }
+
+        wrongLetters.add(guess);
+        updateStatus();
+        const isLost = consumeAttemptAndCheckLose('Sin intentos');
+        if (!isLost) {
+          messageEl.textContent = 'Letra incorrecta: -1 intento.';
+          messageEl.className = 'message lose';
         }
       }
 
@@ -539,11 +551,11 @@
         if (guessWord === secretWord) {
           revealWord();
           updateStatus();
-          finishGame(true);
+          finishWordSolved();
           return;
         }
 
-        const isLost = consumeAttemptAndCheckLose('sin intentos');
+        const isLost = consumeAttemptAndCheckLose('Sin intentos');
         if (!isLost) {
           messageEl.textContent = 'Palabra incorrecta: -1 intento.';
           messageEl.className = 'message lose';
@@ -578,15 +590,15 @@
         ensureTimerStarted();
 
         if (hintUsed) {
-          messageEl.textContent = 'Ya usaste la pista en este nivel.';
+          messageEl.textContent = 'Ya usaste la pista en esta palabra.';
           messageEl.className = 'message';
           return;
         }
 
         hintUsed = true;
-        hintEl.textContent = `Pista: ${currentLevel().hint}`;
+        hintEl.textContent = `Pista: ${currentHint}`;
 
-        const isLost = consumeAttemptAndCheckLose('te quedaste sin intentos por usar pista');
+        const isLost = consumeAttemptAndCheckLose('Te quedaste sin intentos por usar pista');
         if (!isLost) {
           messageEl.textContent = 'Pista usada: -1 intento.';
           messageEl.className = 'message';
