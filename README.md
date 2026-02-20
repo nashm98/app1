@@ -1,4 +1,4 @@
-# app1
+# Memora
 
 Juego web tipo ahorcado con **20 niveles de dificultad** y tiempo limitado.
 
@@ -12,14 +12,8 @@ Juego web tipo ahorcado con **20 niveles de dificultad** y tiempo limitado.
    - El tiempo comienza en la **primera acción** (probar intento o pulsar algún botón).
    - Letra correcta: revela posiciones y suma tiempo extra.
    - Letra incorrecta: descuenta 1 intento.
-   - Palabra incorrecta: descuenta 1 intento y muestra definición de la palabra del nivel.
-   - Intento de palabra (acierto o fallo): muestra definición/uso de la palabra del nivel.
-   - Al perder o al superar el nivel, también se muestra la definición de la palabra del nivel.
+   - Palabra incorrecta: descuenta 1 intento.
    - Usar **PISTA**: muestra ayuda y descuenta 1 intento.
-4. Al completar un nivel, usa **Siguiente nivel** hasta llegar al 20.
-
-## Dificultad y temáticas
-
-- Los primeros niveles usan palabras cotidianas.
-- Luego aumentan longitud y complejidad conceptual.
-- Las temáticas son variadas: hogar, ciudad, naturaleza, ciencia, historia, lengua, finanzas, educación y más.
+4. Al perder o superar nivel, aparece un **popup** con la definición de la palabra:
+   - Si ganas: muestra “Nivel superado” y permite avanzar.
+   - Si pierdes: muestra cartel para **comenzar de nuevo**.

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Adivina la palabra por niveles</title>
+    <title>Memora</title>
     <style>
       :root {
         color-scheme: dark;
@@ -139,10 +139,6 @@
         color: #1a0e00;
       }
 
-      .next-btn {
-        background: linear-gradient(135deg, var(--accent-2) 0%, #6366f1 100%);
-        color: #f8fbff;
-      }
 
       .history,
       .hint {
@@ -180,6 +176,41 @@
         transform: translateY(-1px);
       }
 
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgb(2 6 23 / 0.72);
+        backdrop-filter: blur(3px);
+        display: grid;
+        place-items: center;
+        padding: 16px;
+        z-index: 20;
+      }
+
+      .modal.hidden {
+        display: none;
+      }
+
+      .modal-card {
+        width: min(520px, 100%);
+        background: linear-gradient(165deg, #10192e 0%, #1a2742 100%);
+        border: 1px solid #35507e;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgb(0 0 0 / 0.6);
+        padding: 20px;
+        text-align: center;
+      }
+
+      .modal-card h2 {
+        margin: 0 0 10px;
+      }
+
+      .modal-card p {
+        margin: 0 0 16px;
+        color: var(--muted);
+      }
+
       @media (max-width: 760px) {
         .status {
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -193,7 +224,7 @@
   </head>
   <body>
     <main class="game">
-      <h1>Adivina la palabra por niveles ⏳</h1>
+      <h1>Memora ⏳</h1>
       <p class="meta" id="meta"></p>
 
       <section class="status">
@@ -214,13 +245,20 @@
       <div class="actions">
         <button class="hint-btn" id="hint-btn" type="button">Usar pista (-1 intento)</button>
         <button class="restart-btn" id="restart-btn" type="button">Reiniciar nivel</button>
-        <button class="next-btn" id="next-btn" type="button" hidden>Siguiente nivel</button>
       </div>
 
       <p class="history">Letras usadas: <span id="used">(ninguna)</span></p>
       <p class="hint" id="hint">Pista: (oculta)</p>
       <p class="message" id="message"></p>
     </main>
+
+    <div class="modal hidden" id="result-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-card">
+        <h2 id="modal-title"></h2>
+        <p id="modal-text"></p>
+        <button class="guess-btn" id="modal-action" type="button">Continuar</button>
+      </div>
+    </div>
 
     <script>
       const LEVELS = [
@@ -265,7 +303,6 @@
       const guessInput = document.getElementById('guess-input');
       const hintBtn = document.getElementById('hint-btn');
       const restartBtn = document.getElementById('restart-btn');
-      const nextBtn = document.getElementById('next-btn');
 
       let levelIndex = 0;
       let secretWord = '';
@@ -277,6 +314,11 @@
       let timerStarted = false;
       let gameOver = false;
       let hintUsed = false;
+
+      const modalEl = document.getElementById('result-modal');
+      const modalTitleEl = document.getElementById('modal-title');
+      const modalTextEl = document.getElementById('modal-text');
+      const modalActionBtn = document.getElementById('modal-action');
 
       function currentLevel() {
         return LEVELS[levelIndex];
@@ -328,29 +370,56 @@
         renderWord();
       }
 
+      function openResultModal(win, reason = '') {
+        const definitionText = `Definición: ${currentLevel().hint}`;
+        modalEl.classList.remove('hidden');
+
+        if (win) {
+          modalTitleEl.textContent = 'Nivel superado';
+          modalTextEl.textContent = `${definitionText}`;
+
+          if (levelIndex === MAX_LEVELS - 1) {
+            modalActionBtn.textContent = 'Volver al nivel 1';
+            modalActionBtn.onclick = () => {
+              modalEl.classList.add('hidden');
+              levelIndex = 0;
+              startLevel();
+            };
+          } else {
+            modalActionBtn.textContent = 'Siguiente nivel';
+            modalActionBtn.onclick = () => {
+              modalEl.classList.add('hidden');
+              levelIndex += 1;
+              startLevel();
+            };
+          }
+          return;
+        }
+
+        modalTitleEl.textContent = 'Inténtalo de nuevo';
+        modalTextEl.textContent = `${definitionText}${reason ? ` · Motivo: ${reason}` : ''}`;
+        modalActionBtn.textContent = 'Comenzar de nuevo';
+        modalActionBtn.onclick = () => {
+          modalEl.classList.add('hidden');
+          startLevel();
+        };
+      }
+
       function finishGame(win, reason = '') {
         gameOver = true;
         clearInterval(timerId);
 
-        const definitionText = `Definición: ${currentLevel().hint}`;
-        hintEl.textContent = definitionText;
-
         if (win) {
-          if (levelIndex === MAX_LEVELS - 1) {
-            messageEl.textContent = `¡Ganaste el nivel 20! Completaste todo el juego. 🎉 ${definitionText}`;
-            nextBtn.hidden = true;
-          } else {
-            messageEl.textContent = `¡Nivel superado! Puedes pasar al siguiente. ${definitionText}`;
-            nextBtn.hidden = false;
-          }
+          messageEl.textContent = 'Resultado disponible en la ventana emergente.';
           messageEl.className = 'message win';
+          openResultModal(true, reason);
           return;
         }
 
-        messageEl.textContent = `Perdiste${reason ? ` (${reason})` : ''}. La palabra era ${secretWord}. ${definitionText}`;
-        messageEl.className = 'message lose';
-        nextBtn.hidden = true;
         revealWord();
+        messageEl.textContent = `Perdiste${reason ? ` (${reason})` : ''}.`;
+        messageEl.className = 'message lose';
+        openResultModal(false, reason);
       }
 
       function consumeAttemptAndCheckLose(reason) {
@@ -401,7 +470,7 @@
         hintEl.textContent = 'Pista: (oculta)';
         messageEl.textContent = 'El tiempo comienza en tu primera acción: letra, palabra o botón.';
         messageEl.className = 'message';
-        nextBtn.hidden = true;
+        modalEl.classList.add('hidden');
 
         renderWord();
         updateStatus();
@@ -467,20 +536,16 @@
           return;
         }
 
-        hintEl.textContent = `Definición: ${currentLevel().hint}`;
-
         if (guessWord === secretWord) {
           revealWord();
           updateStatus();
           finishGame(true);
-          messageEl.textContent = `¡Acertaste la palabra! Definición: ${currentLevel().hint}`;
-          messageEl.className = 'message win';
           return;
         }
 
         const isLost = consumeAttemptAndCheckLose('sin intentos');
         if (!isLost) {
-          messageEl.textContent = `Palabra incorrecta: -1 intento. Definición: ${currentLevel().hint}`;
+          messageEl.textContent = 'Palabra incorrecta: -1 intento.';
           messageEl.className = 'message lose';
         }
       }
@@ -531,14 +596,6 @@
       restartBtn.addEventListener('click', () => {
         startLevel();
         ensureTimerStarted();
-      });
-
-      nextBtn.addEventListener('click', () => {
-        if (levelIndex < MAX_LEVELS - 1) {
-          levelIndex += 1;
-          startLevel();
-          ensureTimerStarted();
-        }
       });
 
       startLevel();
