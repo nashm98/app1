@@ -538,13 +538,47 @@
         INTERDISCIPLINARIO: { en: 'INTERDISCIPLINARY', pt: 'INTERDISCIPLINAR' },
       };
 
+
+      const WORD_CLUE_DB = {
+        CASA: ['Pertenece al hogar.', 'Tiene habitaciones y una puerta principal.'],
+        MESA: ['Se encuentra en comedores o cocinas.', 'Tiene una superficie plana para apoyar objetos.'],
+        SILLA: ['Es un mueble para sentarse.', 'Suele acompañar a la mesa.'],
+        LLAVE: ['Es pequeña y de metal en muchos casos.', 'Sirve para abrir cerraduras.'],
+        RELOJ: ['Se consulta varias veces al día.', 'Marca la hora.'],
+        LAPIZ: ['Se usa para escribir y borrar.', 'Suele ser de madera con mina.'],
+        CALLE: ['Forma parte de la ciudad.', 'Por allí circulan autos y peatones.'],
+        PLAZA: ['Es un espacio de encuentro urbano.', 'Puede tener bancos y árboles.'],
+        PARQUE: ['Es un espacio al aire libre.', 'Muchas personas van a caminar o jugar.'],
+        PERRO: ['Es una mascota muy común.', 'Suele ladrar.'],
+        GATO: ['Es una mascota independiente.', 'Suele maullar.'],
+        CONEJO: ['Tiene orejas largas.', 'Puede saltar rápidamente.'],
+        CUADERNO: ['Se usa para tomar apuntes.', 'Tiene hojas encuadernadas.'],
+        PIZARRA: ['Está en aulas y salas de clase.', 'Se escribe sobre su superficie.'],
+        AUTOBUS: ['Transporta varias personas a la vez.', 'Circula por rutas urbanas o interurbanas.'],
+        BICICLETA: ['Tiene dos ruedas.', 'Se impulsa con pedales.'],
+        SEMAFORO: ['Ordena el tránsito en cruces.', 'Usa luces de colores.'],
+        SEMANA: ['Es una medida de tiempo.', 'Está formada por siete días.'],
+        ESTACION: ['Está asociada al clima.', 'En el año hay cuatro principales.'],
+        CALENDARIO: ['Organiza fechas.', 'Muestra días, semanas y meses.'],
+        BOSQUE: ['Es un entorno natural.', 'Tiene abundancia de árboles.'],
+        MONTAÑA: ['Es una elevación del terreno.', 'Puede tener gran altura.'],
+        MURCIELAGO: ['Es un animal nocturno.', 'Puede volar.'],
+        VACUNA: ['Se aplica en salud preventiva.', 'Ayuda a prevenir enfermedades.'],
+        HOSPITAL: ['Es un centro médico.', 'Atiende urgencias y tratamientos.'],
+        ATOMO: ['Pertenece al campo de la ciencia.', 'Es una unidad básica de la materia.'],
+        GALAXIA: ['Pertenece a la astronomía.', 'Contiene enormes conjuntos de estrellas.'],
+        DEMOCRACIA: ['Es un sistema político.', 'Involucra participación ciudadana.'],
+        RECICLAJE: ['Se relaciona con el cuidado ambiental.', 'Transforma residuos para reutilizarlos.'],
+        GEOMETRIA: ['Es una rama de la matemática.', 'Estudia formas y espacio.'],
+      };
+
       const I18N = {
         es: { level: 'Nivel', points: 'Puntos', time: 'Tiempo', attempts: 'Intentos', errors: 'Errores', bonus: '+Tiempo letra', used: 'Letras usadas:', none: '(ninguna)',
-          hintBtn: 'PISTA (-{cost})', restart: 'Reiniciar nivel', hintPrefix: 'Pista', result: 'Resultado disponible en la ventana emergente.', tryAgain: 'Inténtalo de nuevo', restartModal: 'Comenzar de nuevo', done: 'Juego completado', back1: 'Volver al nivel 1', levelDone: 'Nivel superado', nextLevel: 'Siguiente nivel', wordDone: 'Palabra acertada', nextWord: 'Siguiente palabra', noAttempts: 'Sin intentos', timeOver: 'Se acabó el tiempo', loading: 'Cargando...', theme: 'Tema', difficulty: 'Dificultad', hidden: '(oculta)', enterLetter: 'Para letra, ingresa exactamente 1 carácter.', usedLetter: 'Esa letra ya fue usada.', correctLetter: '¡Correcta! Ganaste +{bonus}s.', wrongLetter: 'Letra incorrecta: -1 intento.', invalidWord: 'Ingresa una palabra válida (solo letras).', wrongWord: 'Palabra incorrecta: -1 intento.', invalidInput: 'Ingresa una letra o palabra válida.', hintUsed: 'Pista aplicada: -{cost} puntos.', hintAlready: 'No hay más pistas para esta palabra.', hintNeedLetter: 'Acierta al menos 1 letra para pedir otra pista.', noPointsNeeded: 'No posees puntos necesarios.', hintL1: 'Tema: {theme}. La palabra tiene {length} letras.', hintL2: 'Empieza con "{first}" y termina con "{last}".', themeToggle: 'Modo día/noche', noHintBonus: '¡Sin pistas! +{bonus} punto extra.', correctWord: 'Palabra correcta: {word}', hintL3: 'Contiene {vowels} vocales.', hintL4: 'Incluye la letra \"{mid}\" en su estructura.', hintL5: '{full}' },
+          hintBtn: 'PISTA (-{cost})', restart: 'Reiniciar nivel', hintPrefix: 'Pista', result: 'Resultado disponible en la ventana emergente.', tryAgain: 'Inténtalo de nuevo', restartModal: 'Comenzar de nuevo', done: 'Juego completado', back1: 'Volver al nivel 1', levelDone: 'Nivel superado', nextLevel: 'Siguiente nivel', wordDone: 'Palabra acertada', nextWord: 'Siguiente palabra', noAttempts: 'Sin intentos', timeOver: 'Se acabó el tiempo', loading: 'Cargando...', theme: 'Tema', difficulty: 'Dificultad', hidden: '(oculta)', enterLetter: 'Para letra, ingresa exactamente 1 carácter.', usedLetter: 'Esa letra ya fue usada.', correctLetter: '¡Correcta! Ganaste +{bonus}s.', wrongLetter: 'Letra incorrecta: -1 intento.', invalidWord: 'Ingresa una palabra válida (solo letras).', wrongWord: 'Palabra incorrecta: -1 intento.', invalidInput: 'Ingresa una letra o palabra válida.', hintUsed: 'Pista {step}/{max} aplicada: -{cost} puntos.', hintAlready: 'No hay más pistas para esta palabra.', hintNeedLetter: 'Acierta al menos 1 letra para pedir otra pista.', noPointsNeeded: 'No posees puntos necesarios.', hintL1: 'Pertenece al ámbito de {theme}.', hintL2: 'Comienza con "{first}" y termina con "{last}".', themeToggle: 'Modo día/noche', noHintBonus: '¡Sin pistas! +{bonus} punto extra.', correctWord: 'Palabra correcta: {word}', hintL3: 'Contiene {vowels} vocales.', hintL4: 'Incluye la letra \"{mid}\" en su estructura.', hintL5: '{full}' },
         en: { level: 'Level', points: 'Points', time: 'Time', attempts: 'Attempts', errors: 'Errors', bonus: '+Time/letter', used: 'Used letters:', none: '(none)',
-          hintBtn: 'HINT (-{cost})', restart: 'Restart level', hintPrefix: 'Hint', result: 'Result available in popup.', tryAgain: 'Try again', restartModal: 'Start again', done: 'Game completed', back1: 'Back to level 1', levelDone: 'Level completed', nextLevel: 'Next level', wordDone: 'Word solved', nextWord: 'Next word', noAttempts: 'No attempts left', timeOver: 'Time is over', loading: 'Loading...', theme: 'Theme', difficulty: 'Difficulty', hidden: '(hidden)', enterLetter: 'For a letter, enter exactly 1 character.', usedLetter: 'That letter was already used.', correctLetter: 'Correct! You gained +{bonus}s.', wrongLetter: 'Wrong letter: -1 attempt.', invalidWord: 'Enter a valid word (letters only).', wrongWord: 'Wrong word: -1 attempt.', invalidInput: 'Enter a valid letter or word.', hintUsed: 'Hint applied: -{cost} points.', hintAlready: 'No more hints for this word.', hintNeedLetter: 'Guess at least 1 correct letter to request another hint.', noPointsNeeded: 'You do not have enough points.', hintL1: 'Theme: {theme}. The word has {length} letters.', hintL2: 'It starts with "{first}" and ends with "{last}".', themeToggle: 'Light/Dark mode', noHintBonus: 'No hints used! +{bonus} bonus point.', correctWord: 'Correct word: {word}', hintL3: 'It has {vowels} vowels.', hintL4: 'It includes the letter \"{mid}\".', hintL5: '{full}' },
+          hintBtn: 'HINT (-{cost})', restart: 'Restart level', hintPrefix: 'Hint', result: 'Result available in popup.', tryAgain: 'Try again', restartModal: 'Start again', done: 'Game completed', back1: 'Back to level 1', levelDone: 'Level completed', nextLevel: 'Next level', wordDone: 'Word solved', nextWord: 'Next word', noAttempts: 'No attempts left', timeOver: 'Time is over', loading: 'Loading...', theme: 'Theme', difficulty: 'Difficulty', hidden: '(hidden)', enterLetter: 'For a letter, enter exactly 1 character.', usedLetter: 'That letter was already used.', correctLetter: 'Correct! You gained +{bonus}s.', wrongLetter: 'Wrong letter: -1 attempt.', invalidWord: 'Enter a valid word (letters only).', wrongWord: 'Wrong word: -1 attempt.', invalidInput: 'Enter a valid letter or word.', hintUsed: 'Hint {step}/{max} applied: -{cost} points.', hintAlready: 'No more hints for this word.', hintNeedLetter: 'Guess at least 1 correct letter to request another hint.', noPointsNeeded: 'You do not have enough points.', hintL1: 'It belongs to the {theme} category.', hintL2: 'It starts with "{first}" and ends with "{last}".', themeToggle: 'Light/Dark mode', noHintBonus: 'No hints used! +{bonus} bonus point.', correctWord: 'Correct word: {word}', hintL3: 'It has {vowels} vowels.', hintL4: 'It includes the letter \"{mid}\".', hintL5: '{full}' },
         pt: { level: 'Nível', points: 'Pontos', time: 'Tempo', attempts: 'Tentativas', errors: 'Erros', bonus: '+Tempo/letra', used: 'Letras usadas:', none: '(nenhuma)',
-          hintBtn: 'DICA (-{cost})', restart: 'Reiniciar nível', hintPrefix: 'Dica', result: 'Resultado disponível no popup.', tryAgain: 'Tente novamente', restartModal: 'Começar de novo', done: 'Jogo concluído', back1: 'Voltar ao nível 1', levelDone: 'Nível superado', nextLevel: 'Próximo nível', wordDone: 'Palavra acertada', nextWord: 'Próxima palavra', noAttempts: 'Sem tentativas', timeOver: 'O tempo acabou', loading: 'Carregando...', theme: 'Tema', difficulty: 'Dificuldade', hidden: '(oculta)', enterLetter: 'Para letra, digite exatamente 1 caractere.', usedLetter: 'Essa letra já foi usada.', correctLetter: 'Correta! Você ganhou +{bonus}s.', wrongLetter: 'Letra incorreta: -1 tentativa.', invalidWord: 'Digite uma palavra válida (somente letras).', wrongWord: 'Palavra incorreta: -1 tentativa.', invalidInput: 'Digite uma letra ou palavra válida.', hintUsed: 'Dica aplicada: -{cost} pontos.', hintAlready: 'Não há mais dicas para esta palavra.', hintNeedLetter: 'Acerte ao menos 1 letra para pedir outra dica.', noPointsNeeded: 'Você não possui pontos suficientes.', hintL1: 'Tema: {theme}. A palavra tem {length} letras.', hintL2: 'Começa com "{first}" e termina com "{last}".', themeToggle: 'Modo claro/escuro', noHintBonus: 'Sem dicas! +{bonus} ponto extra.', correctWord: 'Palavra correta: {word}', hintL3: 'Contém {vowels} vogais.', hintL4: 'Inclui a letra \"{mid}\".', hintL5: '{full}' },
+          hintBtn: 'DICA (-{cost})', restart: 'Reiniciar nível', hintPrefix: 'Dica', result: 'Resultado disponível no popup.', tryAgain: 'Tente novamente', restartModal: 'Começar de novo', done: 'Jogo concluído', back1: 'Voltar ao nível 1', levelDone: 'Nível superado', nextLevel: 'Próximo nível', wordDone: 'Palavra acertada', nextWord: 'Próxima palavra', noAttempts: 'Sem tentativas', timeOver: 'O tempo acabou', loading: 'Carregando...', theme: 'Tema', difficulty: 'Dificuldade', hidden: '(oculta)', enterLetter: 'Para letra, digite exatamente 1 caractere.', usedLetter: 'Essa letra já foi usada.', correctLetter: 'Correta! Você ganhou +{bonus}s.', wrongLetter: 'Letra incorreta: -1 tentativa.', invalidWord: 'Digite uma palavra válida (somente letras).', wrongWord: 'Palavra incorreta: -1 tentativa.', invalidInput: 'Digite uma letra ou palavra válida.', hintUsed: 'Dica {step}/{max} aplicada: -{cost} pontos.', hintAlready: 'Não há mais dicas para esta palavra.', hintNeedLetter: 'Acerte ao menos 1 letra para pedir outra dica.', noPointsNeeded: 'Você não possui pontos suficientes.', hintL1: 'Pertence ao âmbito de {theme}.', hintL2: 'Começa com "{first}" e termina com "{last}".', themeToggle: 'Modo claro/escuro', noHintBonus: 'Sem dicas! +{bonus} ponto extra.', correctWord: 'Palavra correta: {word}', hintL3: 'Contém {vowels} vogais.', hintL4: 'Inclui a letra \"{mid}\".', hintL5: '{full}' },
       };
 
       const ONLINE_MODE = true;
@@ -677,8 +711,10 @@
         const last = cleanWord[cleanWord.length - 1] || '';
         const mid = cleanWord[Math.floor(cleanWord.length / 2)] || first;
         const vowels = [...cleanWord].filter((ch) => 'AEIOU'.includes(ch)).length;
-        const level1 = t('hintL1', { theme: currentThemeLabel, length: cleanWord.length || 0 });
-        const level2 = t('hintL2', { first, last });
+        const dbClues = WORD_CLUE_DB[cleanWord] || [];
+
+        const level1 = dbClues[0] || `Pertenece al ámbito de ${currentThemeLabel}.`;
+        const level2 = dbClues[1] || `Comienza con "${first}" y termina con "${last}".`;
         const level3 = t('hintL3', { vowels });
         const level4 = t('hintL4', { mid });
         const level5 = t('hintL5', { full: fullHint || t('hidden') });
@@ -979,7 +1015,7 @@
         hintEl.textContent = `${t('hintPrefix')}: ${hintSteps[hintStep - 1] || currentHint}`;
         updateStatus();
         hintBtn.textContent = t('hintBtn', { cost: HINT_COSTS[Math.min(hintStep, HINT_COSTS.length - 1)] });
-        messageEl.textContent = t('hintUsed', { cost });
+        messageEl.textContent = t('hintUsed', { cost, step: hintStep, max: HINT_COSTS.length });
         messageEl.className = 'message';
       });
 
