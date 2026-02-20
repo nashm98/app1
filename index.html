@@ -7,19 +7,19 @@
     <style>
       :root {
         color-scheme: light dark;
-        --bg: #0f172a;
-        --panel: #1e293b;
-        --text: #e2e8f0;
-        --accent: #38bdf8;
-        --good: #22c55e;
-        --bad: #ef4444;
-        --muted: #94a3b8;
+        --bg: #2C0530;
+        --panel: #381063;
+        --text: #F8F0FF;
+        --accent: #4D0A65;
+        --good: #A7F3D0;
+        --bad: #FECACA;
+        --muted: #D8B4E2;
       }
 
       body {
         margin: 0;
         font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-        background: radial-gradient(circle at top, #1d4ed8, var(--bg));
+        background: radial-gradient(circle at top, #4B146A, var(--bg));
         color: var(--text);
         min-height: 100vh;
         display: grid;
@@ -30,7 +30,7 @@
       .game {
         width: min(860px, 100%);
         background: color-mix(in srgb, var(--panel) 88%, black);
-        border: 1px solid #334155;
+        border: 1px solid #4B146A;
         border-radius: 18px;
         box-shadow: 0 15px 40px rgb(0 0 0 / 0.45);
         padding: 20px;
@@ -49,7 +49,7 @@
       }
 
       .card {
-        background: #0f172a;
+        background: #2C0530;
         border-radius: 12px;
         padding: 10px;
         text-align: center;
@@ -103,9 +103,9 @@
         font-size: 1.05rem;
         text-transform: uppercase;
         border-radius: 10px;
-        border: 1px solid #475569;
+        border: 1px solid #4B146A;
         padding: 8px 10px;
-        background: #0b1220;
+        background: #2C0530;
         color: var(--text);
       }
 
@@ -128,22 +128,22 @@
 
       .guess-btn {
         background: var(--accent);
-        color: #062033;
+        color: #F8F0FF;
       }
 
       .restart-btn {
-        background: #475569;
+        background: #410B59;
         color: var(--text);
       }
 
       .hint-btn {
-        background: #f59e0b;
-        color: #2d1700;
+        background: #4D0A65;
+        color: #F8F0FF;
       }
 
       .next-btn {
-        background: #22c55e;
-        color: #032612;
+        background: #4B146A;
+        color: #F8F0FF;
       }
 
       .history,
@@ -153,7 +153,7 @@
       }
 
       .hint {
-        color: #fde68a;
+        color: #E9D5FF;
         min-height: 1.4em;
       }
 
