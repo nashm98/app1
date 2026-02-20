@@ -208,8 +208,7 @@
 
       <form class="guess-panel" id="guess-form">
         <input id="guess-input" type="text" autocomplete="off" required aria-label="Escribe una letra o palabra completa" placeholder="Escribe una letra o una palabra" />
-        <button class="guess-btn" type="submit" name="mode" value="letter">Probar letra</button>
-        <button class="guess-btn" type="submit" name="mode" value="word">Probar palabra</button>
+        <button class="guess-btn" type="submit">Probar intento</button>
       </form>
 
       <div class="actions">
@@ -465,16 +464,20 @@
           return;
         }
 
+        hintEl.textContent = `Definición: ${currentLevel().hint}`;
+
         if (guessWord === secretWord) {
           revealWord();
           updateStatus();
           finishGame(true);
+          messageEl.textContent = `¡Acertaste la palabra! Definición: ${currentLevel().hint}`;
+          messageEl.className = 'message win';
           return;
         }
 
         const isLost = consumeAttemptAndCheckLose('sin intentos');
         if (!isLost) {
-          messageEl.textContent = 'Palabra incorrecta: -1 intento.';
+          messageEl.textContent = `Palabra incorrecta: -1 intento. Definición: ${currentLevel().hint}`;
           messageEl.className = 'message lose';
         }
       }
@@ -483,15 +486,21 @@
         event.preventDefault();
         if (gameOver) return;
 
-        const mode = event.submitter?.value || 'letter';
         const value = guessInput.value;
         guessInput.value = '';
         guessInput.focus();
 
-        if (mode === 'word') {
-          handleWordGuess(value);
+        const normalized = normalizeText(value);
+        if (!normalized) {
+          messageEl.textContent = 'Ingresa una letra o palabra válida.';
+          messageEl.className = 'message lose';
+          return;
+        }
+
+        if (normalized.length === 1) {
+          handleLetterGuess(normalized);
         } else {
-          handleLetterGuess(value);
+          handleWordGuess(normalized);
         }
       });
 
