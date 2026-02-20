@@ -363,6 +363,69 @@
         { min: 10, max: 13 }, { min: 10, max: 14 }, { min: 10, max: 14 }, { min: 11, max: 16 },
       ];
 
+      const WORD_TRANSLATIONS = {
+        SOL: { en: 'SUN', pt: 'SOL' },
+        PAN: { en: 'BREAD', pt: 'PAO' },
+        RIO: { en: 'RIVER', pt: 'RIO' },
+        CASA: { en: 'HOUSE', pt: 'CASA' },
+        MESA: { en: 'TABLE', pt: 'MESA' },
+        SILLA: { en: 'CHAIR', pt: 'CADEIRA' },
+        LLAVE: { en: 'KEY', pt: 'CHAVE' },
+        RELOJ: { en: 'CLOCK', pt: 'RELOGIO' },
+        LAPIZ: { en: 'PENCIL', pt: 'LAPIS' },
+        CALLE: { en: 'STREET', pt: 'RUA' },
+        PLAZA: { en: 'SQUARE', pt: 'PRACA' },
+        PARQUE: { en: 'PARK', pt: 'PARQUE' },
+        PERRO: { en: 'DOG', pt: 'CACHORRO' },
+        GATO: { en: 'CAT', pt: 'GATO' },
+        CONEJO: { en: 'RABBIT', pt: 'COELHO' },
+        MOCHILA: { en: 'BACKPACK', pt: 'MOCHILA' },
+        CUADERNO: { en: 'NOTEBOOK', pt: 'CADERNO' },
+        PIZARRA: { en: 'BLACKBOARD', pt: 'QUADRO' },
+        AUTOBUS: { en: 'BUS', pt: 'ONIBUS' },
+        BICICLETA: { en: 'BICYCLE', pt: 'BICICLETA' },
+        SEMAFORO: { en: 'TRAFFICLIGHT', pt: 'SEMAFORO' },
+        SEMANA: { en: 'WEEK', pt: 'SEMANA' },
+        ESTACION: { en: 'SEASON', pt: 'ESTACAO' },
+        CALENDARIO: { en: 'CALENDAR', pt: 'CALENDARIO' },
+        BOSQUE: { en: 'FOREST', pt: 'FLORESTA' },
+        MONTAÑA: { en: 'MOUNTAIN', pt: 'MONTANHA' },
+        MURCIELAGO: { en: 'BAT', pt: 'MORCEGO' },
+        VACUNA: { en: 'VACCINE', pt: 'VACINA' },
+        TERAPIA: { en: 'THERAPY', pt: 'TERAPIA' },
+        HOSPITAL: { en: 'HOSPITAL', pt: 'HOSPITAL' },
+        ATOMO: { en: 'ATOM', pt: 'ATOMO' },
+        ECLIPSE: { en: 'ECLIPSE', pt: 'ECLIPSE' },
+        GALAXIA: { en: 'GALAXY', pt: 'GALAXIA' },
+        DERECHOS: { en: 'RIGHTS', pt: 'DIREITOS' },
+        DEMOCRACIA: { en: 'DEMOCRACY', pt: 'DEMOCRACIA' },
+        CIUDADANIA: { en: 'CITIZENSHIP', pt: 'CIDADANIA' },
+        IMPERIO: { en: 'EMPIRE', pt: 'IMPERIO' },
+        REVOLUCION: { en: 'REVOLUTION', pt: 'REVOLUCAO' },
+        ARQUEOLOGIA: { en: 'ARCHAEOLOGY', pt: 'ARQUEOLOGIA' },
+        RECICLAJE: { en: 'RECYCLING', pt: 'RECICLAGEM' },
+        ECOSISTEMA: { en: 'ECOSYSTEM', pt: 'ECOSSISTEMA' },
+        BIODIVERSIDAD: { en: 'BIODIVERSITY', pt: 'BIODIVERSIDADE' },
+        FRACCION: { en: 'FRACTION', pt: 'FRACAO' },
+        GEOMETRIA: { en: 'GEOMETRY', pt: 'GEOMETRIA' },
+        HIPOTENUSA: { en: 'HYPOTENUSE', pt: 'HIPOTENUSA' },
+        SINTAXIS: { en: 'SYNTAX', pt: 'SINTAXE' },
+        SEMANTICA: { en: 'SEMANTICS', pt: 'SEMANTICA' },
+        METAFORA: { en: 'METAPHOR', pt: 'METAFORA' },
+        AHORRO: { en: 'SAVINGS', pt: 'POUPANCA' },
+        INVERSION: { en: 'INVESTMENT', pt: 'INVESTIMENTO' },
+        CRIPTOMONEDA: { en: 'CRYPTOCURRENCY', pt: 'CRIPTOMOEDA' },
+        GENETICA: { en: 'GENETICS', pt: 'GENETICA' },
+        MITOCONDRIA: { en: 'MITOCHONDRIA', pt: 'MITOCONDRIA' },
+        NEUROPLASTICIDAD: { en: 'NEUROPLASTICITY', pt: 'NEUROPLASTICIDADE' },
+        INERCIA: { en: 'INERTIA', pt: 'INERCIA' },
+        GRAVEDAD: { en: 'GRAVITY', pt: 'GRAVIDADE' },
+        TERMODINAMICA: { en: 'THERMODYNAMICS', pt: 'TERMODINAMICA' },
+        PEDAGOGIA: { en: 'PEDAGOGY', pt: 'PEDAGOGIA' },
+        CURRICULO: { en: 'CURRICULUM', pt: 'CURRICULO' },
+        INTERDISCIPLINARIO: { en: 'INTERDISCIPLINARY', pt: 'INTERDISCIPLINAR' },
+      };
+
       const I18N = {
         es: { level: 'Nivel', points: 'Puntos', time: 'Tiempo', attempts: 'Intentos', errors: 'Errores', bonus: '+Tiempo letra', used: 'Letras usadas:', none: '(ninguna)',
           hintBtn: 'PISTA (-1)', restart: 'Reiniciar nivel', hintPrefix: 'Pista', result: 'Resultado disponible en la ventana emergente.', tryAgain: 'Inténtalo de nuevo', restartModal: 'Comenzar de nuevo', done: 'Juego completado', back1: 'Volver al nivel 1', levelDone: 'Nivel superado', nextLevel: 'Siguiente nivel', wordDone: 'Palabra acertada', nextWord: 'Siguiente palabra', noAttempts: 'Sin intentos', timeOver: 'Se acabó el tiempo', loading: 'Cargando...', theme: 'Tema', difficulty: 'Dificultad', hidden: '(oculta)', enterLetter: 'Para letra, ingresa exactamente 1 carácter.', usedLetter: 'Esa letra ya fue usada.', correctLetter: '¡Correcta! Ganaste +{bonus}s.', wrongLetter: 'Letra incorrecta: -1 intento.', invalidWord: 'Ingresa una palabra válida (solo letras).', wrongWord: 'Palabra incorrecta: -1 intento.', invalidInput: 'Ingresa una letra o palabra válida.', hintUsed: 'Pista usada: -1 intento.', hintAlready: 'Ya usaste la pista en esta palabra.', themeToggle: 'Modo día/noche' },
@@ -511,11 +574,19 @@
       }
 
       async function localizeWordEntry(entry) {
-        if (currentLang === 'es') return { word: sanitizeWord(entry.word), hint: entry.hint, theme: currentLevel().theme };
-        const translatedWord = sanitizeWord(await translateText(entry.word.toLowerCase(), currentLang, 'es'));
+        const baseWord = sanitizeWord(entry.word);
+        if (currentLang === 'es') return { word: baseWord, hint: entry.hint, theme: currentLevel().theme };
+
+        const mappedWord = WORD_TRANSLATIONS[baseWord]?.[currentLang];
+        const translatedWord = mappedWord ? sanitizeWord(mappedWord) : sanitizeWord(await translateText(baseWord.toLowerCase(), currentLang, 'es'));
         const translatedHint = await translateText(entry.hint, currentLang, 'es');
         const translatedTheme = await translateText(currentLevel().theme, currentLang, 'es');
-        return { word: translatedWord || sanitizeWord(entry.word), hint: translatedHint, theme: translatedTheme };
+
+        return {
+          word: translatedWord || baseWord,
+          hint: translatedHint || entry.hint,
+          theme: translatedTheme || currentLevel().theme,
+        };
       }
 
       async function fetchOnlineDefinitionEn(word) {
@@ -554,7 +625,7 @@
       }
 
       function shouldUseOnlineMode() {
-        return ONLINE_MODE && currentLang !== 'es';
+        return ONLINE_MODE && currentLang === 'en';
       }
 
       async function pickWordEntry() {
